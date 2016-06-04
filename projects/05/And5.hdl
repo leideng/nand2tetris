@@ -1,0 +1,22 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/And.hdl
+
+/**
+ * And gate: 
+ * out = 1 if (a == 1 and b == 1 and c==1 and d==1 and e==1)
+ *       0 otherwise
+ */
+
+CHIP And5 {
+    IN a, b, c, d, e;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    And(a=a, b=b, out=and1);
+    And(a=c, b=and1, out=and2);
+    And(a=d, b=and2, out=and3);
+    And(a=e, b=and3, out=out);
+}
