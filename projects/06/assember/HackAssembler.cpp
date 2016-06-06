@@ -1,4 +1,5 @@
 #include "HackAssembler.h"
+#include "HackParser.h"
 #include<iostream>
 #include<fstream>
 #include<cstdlib>
@@ -17,7 +18,7 @@ void HackAssembler::assembler()
 {
     removeWhiteSpaceAndComments();
     
- //   printAsmProgram();
+    printAsmProgram();
     
     removeSymbols();
     translatePureAsmIntoBinary();
@@ -30,18 +31,18 @@ void HackAssembler::removeWhiteSpaceAndComments()
     // if a line is empty or pure white space, remove this line
     // otherwise, remove the leading and ending white space, and also comments
     for(int line_no=0; line_no<asm_program_.size(); ++line_no)
-    {
-        
+    {  
         //the original code
         std::string code = asm_program_[line_no];
         
        // std::cout << "line_no=" << line_no << ":" << code << std::endl;
+        HackParser parser(code);
         
-        removeCommentsSingleLine(code);
-        removeLeadingAndEndingWhiteSpaceSingleLine(code);
+        parser.removeComments();
+        parser.removeLeadingAndEndingWhiteSpace();
 
         //remove empty line 
-        if(code.empty())
+        if(parser.isEmpty())
         {
             asm_program_.erase(asm_program_.begin()+line_no);
             //decrement line_no such that next time it still comes to line line_no 
@@ -50,13 +51,21 @@ void HackAssembler::removeWhiteSpaceAndComments()
         }
         else
         {
-            asm_program_[line_no] = code;
+            asm_program_[line_no] = parser.getCode();
         } 
     }    
 }
 
 void HackAssembler::removeSymbols()
 {
+    ///construct the symbol table
+    ///initialize the symbol table, by adding the predefined symbols
+    addPredefinedToSymbolTable();
+    printSymbolTable();
+    ///first pass the asm program, by adding the label symbols
+    addLablesToSymbolTable();
+    ///second pass the asm program, by adding the variable symbols
+    addVariablesToSymbolTable();
 }
 
 
@@ -81,7 +90,6 @@ void HackAssembler::readAsmFile()
         buffer.clear();
     }
     //printAsmProgram();
-    return;
 }
 
 
@@ -91,7 +99,6 @@ void HackAssembler::printAsmProgram() const
     {
         std::cout << asm_program_[i] << std::endl;
     }
-    return;
 }
 
 void HackAssembler::printSymbolTable() const
@@ -100,102 +107,50 @@ void HackAssembler::printSymbolTable() const
     {
         std::cout << miter->first << "," << miter->second << std::endl;
     }
-    return;
 }
 
-void HackAssembler::removeLeadingAndEndingWhiteSpaceSingleLine(std::string& code)
+
+void HackAssembler::addPredefinedToSymbolTable()
 {
-    //find the first non-white letter
-    int first_non_white_idx = -1;
-    for(int i=0; i < code.size(); ++i)
-    {
-        if(std::isspace(code[i]))
-        {
-            continue;
-        }
-        else
-        {
-            first_non_white_idx = i;
-            break;
-        }            
-    }
-    //empty line or white-space line
-    if(first_non_white_idx == -1)
-    {
-        code.clear();
-        return;
-    }
-    
-    //first the last non-white letter
-    int last_non_white_idx = -1;
-    for(int i=code.size()-1; i >= 0; --i)
-    {
-        if(std::isspace(code[i]))
-        {
-            continue;
-        }
-        else
-        {
-            last_non_white_idx = i;
-            break;
-        }              
-    }
-    
-    //remove leading white space and ending white space
-    code = code.substr(first_non_white_idx, last_non_white_idx-first_non_white_idx+1);
+    symbol_table_["SP"] = 0;
+    symbol_table_["LCL"] = 1;
+    symbol_table_["ARG"] = 2;
+    symbol_table_["THIS"] = 3;
+    symbol_table_["THAT"] = 4;
+    symbol_table_["R0"] = 0;
+    symbol_table_["R1"] = 1;
+    symbol_table_["R2"] = 2;
+    symbol_table_["R3"] = 3;
+    symbol_table_["R4"] = 4;
+    symbol_table_["R5"] = 5;
+    symbol_table_["R6"] = 6;
+    symbol_table_["R7"] = 7;
+    symbol_table_["R8"] = 8;
+    symbol_table_["R9"] = 9;
+    symbol_table_["R10"] = 10;
+    symbol_table_["R11"] = 11;
+    symbol_table_["R12"] = 12;
+    symbol_table_["R13"] = 13;
+    symbol_table_["R14"] = 14;
+    symbol_table_["R15"] = 15;
+    symbol_table_["SCREEN"] = 16384;
+    symbol_table_["KBD"] = 24576;
 }
 
-void HackAssembler::removeCommentsSingleLine(std::string& code)
+void HackAssembler::addLablesToSymbolTable()
 {
-    //remove comment, use a finite automata to find the pattern "//"
-    // we use three states: 
-    // state 1: others
-    // state 2: "/"
-    // state 3: "//"
-    
-    //the index of the beginning of comments in this line
-    int comment_state_idx = -1;
-    int state = 1;
-    for(int i=0; i < code.size(); ++i)
+    int instruction_line = 0;
+    for(int i=0; i < asm_program_.size(); i++)
     {
-        if(state == 1)
+        HackParser parser(asm_program_[i]);
+        HackParser::CommandType command_type = parser.getCommandType();
+        if(command_type == HackParser::L_COMMAND) // L command
         {
-            if(code[i] == '/')
-            {
-                //turn to state 2: "/"
-                state = 2;
-            }
-            else
-            {
-                //still in state 1: others
-                state = 1;
-            }
+            std::string symbol = parser.getSymbol();
         }
-        else if(state == 2)
-        {
-            if(code[i] == '/')
-            {
-                //turn to state 3: "//"
-                state = 3;
-            }
-            else
-            {
-                //turn to state 1: others
-                state = 1;
-            }
-        }
-        
-        // state == 3, we have found "//"
-        if(state == 3)
-        {
-            comment_state_idx = i-1;
-            break; 
-        }
-    }
-    
-    //std::cout << "comment_state_idx=" << comment_state_idx << std::endl;
-    if(comment_state_idx != -1) //we did find comments
-    {
-        code.erase(code.begin()+comment_state_idx, code.end());       
-    }
+    }  
+}
+
+void HackAssembler::addVariablesToSymbolTable()
+{
 }

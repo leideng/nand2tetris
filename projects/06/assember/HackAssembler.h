@@ -33,13 +33,15 @@ class HackAssembler
     ///read the input asm file and construct the string vector asm_program_
     void readAsmFile();
     
-    ///remove the leading white space and ending white space of the input single-line code
-    ///used by @see removeWhiteSpaceAndComments()
-    void removeLeadingAndEndingWhiteSpaceSingleLine(std::string& code);
+    ///initialize the symbol table, by adding the predefined symbols
+    void addPredefinedToSymbolTable();
     
-    ///remove the comment of the input single-line code
-    ///used by @see removeWhiteSpaceAndComments()
-    void removeCommentsSingleLine(std:: string& code);
+    ///first pass the asm program, by adding the label symbols
+    void addLablesToSymbolTable();
+    
+    ///second pass the asm program, by adding the variable symbols
+    void addVariablesToSymbolTable(); 
+    
     
     ///print asm_program_ 
     void printAsmProgram() const;

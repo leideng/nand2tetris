@@ -1,2 +1,2 @@
 all:
-	g++ -g main.cpp HackAssembler.cpp -o Assembler
+	g++ -g main.cpp HackParser.cpp HackAssembler.cpp -o Assembler
