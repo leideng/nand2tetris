@@ -44,6 +44,10 @@ class HackParser
     ///L Command: (XXX), return XXX
     std::string getSymbol() const;
     
+    ///judge if an A command contains a variable
+    ///return true if @xxx where xxx is not a decimal number
+    bool containVariable() const;
+    
     private:
    
     ///the single-line code

@@ -132,7 +132,7 @@ HackParser::CommandType HackParser::getCommandType() const
     
     if(code_[0] == '(' && code_[code_.size()-1] == ')')
     {
-        return C_COMMAND;
+        return L_COMMAND;
     }
     return C_COMMAND;
 }
@@ -155,4 +155,30 @@ std::string HackParser::getSymbol() const
     {
         return code_.substr(1, code_.size()-2);
     }
+}
+
+bool HackParser::containVariable() const
+{
+    HackParser::CommandType command_type = getCommandType();
+    if(command_type != HackParser::A_COMMAND) //not A command
+    {
+        return false;
+    }
+    
+    std::string symbol = getSymbol();
+    
+    bool isDecimal = true;
+    for(int i=0; i < symbol.size(); i++)
+    {
+        if(isdigit(symbol[i]))
+        {
+            continue;
+        }
+        else
+        {
+            isDecimal = false;
+            break;
+        }
+    }
+    return (!isDecimal);
 }

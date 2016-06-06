@@ -1,6 +1,7 @@
 #include "HackAssembler.h"
 #include "HackParser.h"
 #include<iostream>
+#include <sstream> 
 #include<fstream>
 #include<cstdlib>
 #include<cctype>
@@ -17,10 +18,9 @@ HackAssembler::HackAssembler(std::string asm_file_in, std::string binary_file_ou
 void HackAssembler::assembler()
 {
     removeWhiteSpaceAndComments();
-    
+    removeSymbols();
     printAsmProgram();
     
-    removeSymbols();
     translatePureAsmIntoBinary();
 }
 
@@ -61,11 +61,48 @@ void HackAssembler::removeSymbols()
     ///construct the symbol table
     ///initialize the symbol table, by adding the predefined symbols
     addPredefinedToSymbolTable();
-    printSymbolTable();
+    
+    // printSymbolTable();
     ///first pass the asm program, by adding the label symbols
     addLablesToSymbolTable();
+    
+    //printSymbolTable();
     ///second pass the asm program, by adding the variable symbols
     addVariablesToSymbolTable();
+    
+    //printSymbolTable();
+    
+    //now we remove the L_COMMAND lines and replace all symbols with values in the symbol_table_
+    for(int line_no=0; line_no < asm_program_.size(); line_no++)
+    {
+        HackParser parser(asm_program_[line_no]);
+        HackParser::CommandType command_type = parser.getCommandType();
+        if(command_type == HackParser::L_COMMAND) // L command
+        {
+            asm_program_.erase(asm_program_.begin()+line_no);
+            --line_no;
+            continue;
+        }
+        
+        if(command_type == HackParser::A_COMMAND && parser.containVariable()) // A command
+        {
+            std::string symbol = parser.getSymbol();
+            if(symbol_table_.find(symbol) == symbol_table_.end())
+            {
+                std::cout << "cannot find the symbol: " << symbol << std::endl;
+                exit(-1);
+                
+            }
+            else
+            {
+                int value = symbol_table_[symbol];
+                std::ostringstream convert;   // stream used for the conversion
+                convert << value;      // insert the textual representation of 'value' in the characters in the stream
+                std::string value_str = convert.str(); // string which will contain the decimal value 
+                asm_program_[line_no] = '@' + value_str; // set the new command by replacing the symbols with values
+            }
+        } 
+    }
 }
 
 
@@ -146,11 +183,34 @@ void HackAssembler::addLablesToSymbolTable()
         HackParser::CommandType command_type = parser.getCommandType();
         if(command_type == HackParser::L_COMMAND) // L command
         {
-            std::string symbol = parser.getSymbol();
+            
+            std::string symbol = parser.getSymbol(); 
+            //std::cout << "get a L command, with symbol: " << symbol << std::endl;
+            //add to the symbol table
+            symbol_table_[symbol] = instruction_line;
+        }
+        else // A or C command
+        {
+            instruction_line++;
         }
     }  
 }
 
 void HackAssembler::addVariablesToSymbolTable()
 {
+    int RAM_address = 16;
+    for(int i=0; i < asm_program_.size(); i++)
+    {
+        HackParser parser(asm_program_[i]);
+        HackParser::CommandType command_type = parser.getCommandType();
+        if(command_type == HackParser::A_COMMAND && parser.containVariable())
+        {
+            std::string symbol = parser.getSymbol();
+            if(symbol_table_.find(symbol) == symbol_table_.end())
+            {
+                symbol_table_[symbol] = RAM_address;
+                RAM_address++;
+            }
+        }
+    }
 }
