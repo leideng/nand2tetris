@@ -19,7 +19,8 @@ void HackAssembler::assembler()
 {
     removeWhiteSpaceAndComments();
     removeSymbols();
-    printAsmProgram();
+    
+ //   printAsmProgram();
     
     translatePureAsmIntoBinary();
 }
@@ -108,6 +109,12 @@ void HackAssembler::removeSymbols()
 
 void HackAssembler::translatePureAsmIntoBinary()
 {
+    std::ofstream ofs(binary_file_.c_str(),std::ofstream::out);
+    for(int i=0; i<asm_program_.size(); ++i)
+    {
+        HackParser parser(asm_program_[i]);
+        ofs << parser.convertToBinary() << std::endl;
+    }
 }
 
 

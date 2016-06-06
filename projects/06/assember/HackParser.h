@@ -48,6 +48,17 @@ class HackParser
     ///return true if @xxx where xxx is not a decimal number
     bool containVariable() const;
     
+    ///convert the assembler command into binary machine language
+    ///Note that the assembler command must have not symbols
+    std::string convertToBinary() const;
+    
+    ///convert the A assembler command into binary machine language
+    ///Note that the assembler command must have not symbols
+    std::string convertToBinaryACommand() const;
+    
+    ///convert the C assembler command into binary machine language
+    std::string convertToBinaryCCommand() const;
+    
     private:
    
     ///the single-line code
