@@ -17,7 +17,7 @@ void HackAssembler::assembler()
 {
     removeWhiteSpaceAndComments();
     
-    printAsmProgram();
+ //   printAsmProgram();
     
     removeSymbols();
     translatePureAsmIntoBinary();
