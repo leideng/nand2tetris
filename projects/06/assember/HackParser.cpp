@@ -220,6 +220,8 @@ std::string HackParser::convertToBinaryACommand() const
     return binary;
 }
 
+///@Note: The C command dest=comp;jump cannot contain white space
+///I did not handle white space in this program
 std::string HackParser::convertToBinaryCCommand() const
 {
     if(getCommandType() != HackParser::C_COMMAND)
