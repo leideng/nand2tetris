@@ -54,6 +54,12 @@ class Parser
     ///convert the VM command with C_ARITHMETIC type into asm codes
     std::string convertToAsmArithmetic() const;
     
+    ///convert the VM command with C_PUSH type into asm codes
+    std::string convertToAsmPush() const;
+    
+    ///convert the VM command with C_POP type into asm codes
+    std::string convertToAsmPop() const;
+    
     ///convert the individual VM  arithmetic command into asm codes
     std::string convertToAsmAdd() const;
     std::string convertToAsmSub() const;
@@ -65,25 +71,22 @@ class Parser
     std::string convertToAsmOr() const;
     std::string convertToAsmNot() const;
     
-    ///convert the VM command with C_PUSH or C_POP type into asm codes
-    std::string convertToAsmPush() const;
-    std::string convertToAsmPop() const;
-    
+
+    ///convert the individual (segment) VM push command into asm codes
     std::string convertToAsmPushArgument() const;
     std::string convertToAsmPushLocal() const;
     std::string convertToAsmPushThis() const;
     std::string convertToAsmPushThat() const;
-    
     std::string convertToAsmPushTemp() const;
     std::string convertToAsmPushPointer() const;
     std::string convertToAsmPushConstant() const;
     std::string convertToAsmPushStatic() const;
     
+    ///convert the individual (segment) VM pop command into asm codes
     std::string convertToAsmPopArgument() const;
     std::string convertToAsmPopLocal() const;
     std::string convertToAsmPopThis() const;
     std::string convertToAsmPopThat() const;
-    
     std::string convertToAsmPopTemp() const;
     std::string convertToAsmPopPointer() const;
     std::string convertToAsmPopStatic() const;

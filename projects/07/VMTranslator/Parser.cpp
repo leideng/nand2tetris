@@ -347,7 +347,7 @@ std::string Parser::convertToAsmPop() const
 }
 
 
-/********************** individual convertToAsm functions **********************/
+/********************** individual convertToAsmArithmetic functions **********************/
 std::string Parser::convertToAsmAdd() const
 {
     std::string asm_code;
@@ -506,7 +506,7 @@ std::string Parser::convertToAsmLt() const
 
 
 
-/********************** individual convertToPush functions **********************/
+/********************** individual convertToAsmPush functions **********************/
 
 std::string Parser::convertToAsmPushArgument() const
 {
@@ -714,7 +714,7 @@ std::string Parser::convertToAsmPushStatic() const
 }
 
 
-/********************** individual convertToPop functions **********************/
+/********************** individual convertToAsmPop functions **********************/
 
 std::string Parser::convertToAsmPopArgument() const
 {
