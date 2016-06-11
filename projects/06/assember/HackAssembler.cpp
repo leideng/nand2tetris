@@ -52,7 +52,7 @@ void HackAssembler::removeWhiteSpaceAndComments()
         }
         else
         {
-            asm_program_[line_no] = parser.getCode();
+            parser.convertToAsm();
         } 
     }    
 }
