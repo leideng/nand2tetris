@@ -42,7 +42,7 @@ void VMTranslator::translateSingleVMFile(const std::string& VM_input_file)
     std::string buffer;
     while(std::getline(ifs, buffer))
     {
-        Parser parser(buffer);
+        Parser parser(buffer, VM_input_file);
         
         parser.removeComments();
         parser.removeLeadingAndEndingWhiteSpace();

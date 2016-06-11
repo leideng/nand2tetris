@@ -23,7 +23,7 @@ class Parser
     };
     
     ///constructor
-    Parser(const std::string& code);
+    Parser(const std::string& code, const std::string& VM_file_name);
     
     ///remove the leading white space and ending white space of the single-line code
     ///update code_
@@ -69,6 +69,26 @@ class Parser
     std::string convertToAsmPush() const;
     std::string convertToAsmPop() const;
     
+    std::string convertToAsmPushArgument() const;
+    std::string convertToAsmPushLocal() const;
+    std::string convertToAsmPushThis() const;
+    std::string convertToAsmPushThat() const;
+    
+    std::string convertToAsmPushTemp() const;
+    std::string convertToAsmPushPointer() const;
+    std::string convertToAsmPushConstant() const;
+    std::string convertToAsmPushStatic() const;
+    
+    std::string convertToAsmPopArgument() const;
+    std::string convertToAsmPopLocal() const;
+    std::string convertToAsmPopThis() const;
+    std::string convertToAsmPopThat() const;
+    
+    std::string convertToAsmPopTemp() const;
+    std::string convertToAsmPopPointer() const;
+    std::string convertToAsmPopStatic() const;
+    
+    
     ///assign a unique label for the converted asm code
     ///We use the following format:
     ///     _VMTRANSLATOR_(label_counter_)_symbol
@@ -80,6 +100,10 @@ class Parser
 
     ///the VM command
     std::string code_;
+    
+    ///the VM file name where code_ locates
+    ///used to handle static variables
+    std::string VM_file_name_;
     
     ///the current label counter, it is a static variable shared by all Parser objects
     ///Initialize it as 0

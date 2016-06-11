@@ -9,9 +9,22 @@
 ///initialize label_counter_
 int Parser::label_counter_ = 0;
 
-Parser::Parser(const std::string& code)
+Parser::Parser(const std::string& code,const std::string& VM_file_name)
 {
     code_ = code;
+    //the CPU emulator does not support symbol with '/' in the asm code
+    //we thus replace '/' by '_'
+    for(int i=0; i < VM_file_name.size(); i++)
+    {
+        if(VM_file_name[i] == '/')
+        {
+            VM_file_name_ += '_';
+        }
+        else 
+        {
+            VM_file_name_ += VM_file_name[i];
+        }
+    }
 }
 
 
@@ -250,11 +263,91 @@ std::string Parser::convertToAsmArithmetic() const
         std::cout << "do not have such arithmetic command:" << command << std::endl;
         exit(-1);
     }
-    
- 
-    
 }
 
+
+std::string Parser::convertToAsmPush() const
+{
+    std::string segment = getArg1();    
+    if(segment == "constant")
+    {        
+        return convertToAsmPushConstant();
+    }
+    else if(segment == "argument")
+    {
+        return convertToAsmPushArgument();
+    }
+    else if(segment == "local")
+    {
+        return convertToAsmPushLocal();
+    }
+    else if(segment == "this")
+    {
+        return convertToAsmPushThis();
+    }
+    else if(segment == "that")
+    {
+        return convertToAsmPushThat();
+    }
+    else if(segment == "pointer")
+    {
+        return convertToAsmPushPointer();
+    }
+    else if(segment == "temp")
+    {
+        return convertToAsmPushTemp();
+    }          
+    else if(segment == "static")
+    {
+        return convertToAsmPushStatic();
+    }
+    else
+    {
+        std::cout << "cannot handle such segment: " << segment << std::endl;
+        exit(-1);
+    }
+}
+
+std::string Parser::convertToAsmPop() const
+{
+    std::string segment = getArg1();    
+    if(segment == "argument")
+    {
+        return convertToAsmPopArgument();
+    }
+    else if(segment == "local")
+    {
+        return convertToAsmPopLocal();
+    }
+    else if(segment == "this")
+    {
+        return convertToAsmPopThis();
+    }
+    else if(segment == "that")
+    {
+        return convertToAsmPopThat();
+    }
+    else if(segment == "pointer")
+    {
+        return convertToAsmPopPointer();
+    }
+    else if(segment == "temp")
+    {
+        return convertToAsmPopTemp();
+    }          
+    else if(segment == "static")
+    {
+        return convertToAsmPopStatic();
+    }
+    else
+    {
+        std::cout << "cannot handle such segment: " << segment << std::endl;
+        exit(-1);
+    }    
+}
+
+
+/********************** individual convertToAsm functions **********************/
 std::string Parser::convertToAsmAdd() const
 {
     std::string asm_code;
@@ -413,35 +506,431 @@ std::string Parser::convertToAsmLt() const
 
 
 
-std::string Parser::convertToAsmPush() const
+/********************** individual convertToPush functions **********************/
+
+std::string Parser::convertToAsmPushArgument() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+    
+    asm_code += "@ARG\n"; 
+    asm_code += "D=M\n";  //store the segment base address into register D
+    
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "A=A+D\n"; //A=segment base address + index
+    asm_code += "D=M\n"; //store RAM[segment base address + index] into register D
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n";  //push RAM[segment base address + index] into the stack
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n"; //increase SP by 1
+    
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPushLocal() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+    
+    asm_code += "@LCL\n"; 
+    asm_code += "D=M\n";  //store the segment base address into register D
+    
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "A=A+D\n"; //A=segment base address + index
+    asm_code += "D=M\n"; //store RAM[segment base address + index] into register D
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n";  //push RAM[segment base address + index] into the stack
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n"; //increase SP by 1
+    
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPushThis() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+    
+    asm_code += "@THIS\n"; 
+    asm_code += "D=M\n";  //store the segment base address into register D
+    
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "A=A+D\n"; //A=segment base address + index
+    asm_code += "D=M\n"; //store RAM[segment base address + index] into register D
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n";  //push RAM[segment base address + index] into the stack
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n"; //increase SP by 1
+    
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPushThat() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+    
+    asm_code += "@THAT\n"; 
+    asm_code += "D=M\n";  //store the segment base address into register D
+    
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "A=A+D\n"; //A=segment base address + index
+    asm_code += "D=M\n"; //store RAM[segment base address + index] into register D
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n";  //push RAM[segment base address + index] into the stack
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n"; //increase SP by 1
+    
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPushTemp() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    if(index < 0 || index > 7)
+    {
+        std::cout << "index for temp segment is not in range [0,7]" << std::endl;
+        exit(-1);
+    }
+    std::ostringstream oss;
+    oss << (index + 5); //temp 0 = R5, temp 1 = R6, ..., temp 7 = R12
+    asm_code += "@R" + oss.str() + '\n';
+    asm_code += "D=M\n"; // store the value RAM[temp index] into register D
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n";  // push the value RAM[temp index] into the stack 
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n"; //increase SP by 1 
+    
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPushPointer() const
+{
+    std::string asm_code;
+    int index = getArg2();
+
+    if(index == 0) //push pointer 0
+    {
+        asm_code += "@THIS\n"; 
+        asm_code += "D=M\n"; //store the value RAM[THIS] into register D
+
+        asm_code += "@SP\n";
+        asm_code += "A=M\n";
+        asm_code += "M=D\n";  // push the value RAM[THIS] into the stack 
+    
+        asm_code += "@SP\n";
+        asm_code += "M=M+1\n"; //increase SP by 1 
+    }
+    else if(index == 1) //push pointer 1
+    {
+        asm_code += "@THAT\n"; 
+        asm_code += "D=M\n"; //store the value RAM[THAT] into register D
+
+        asm_code += "@SP\n";
+        asm_code += "A=M\n";
+        asm_code += "M=D\n";  // push the value RAM[THAT] into the stack 
+    
+        asm_code += "@SP\n";
+        asm_code += "M=M+1\n"; //increase SP by 1 
+    }
+    else
+    {
+        std::cout << "index for pointer segment is not in range [0,1]" << std::endl;
+        exit(-1);        
+    }
+    
+    return asm_code;
+}
+
+
+std::string Parser::convertToAsmPushConstant() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+    
+    asm_code += '@' + index_str + '\n';
+    asm_code += "D=A\n"; //store the constant into register A
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; //push the constant into the stack
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n"; //increase SP by 1
+    
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPushStatic() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+    
+    asm_code += ('@' + VM_file_name_ + '.' + index_str + '\n');
+    asm_code += "D=M\n";
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; //push the value into the stack
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n"; //increase SP by 1
+    
+    return asm_code;
+}
+
+
+/********************** individual convertToPop functions **********************/
+
+std::string Parser::convertToAsmPopArgument() const
 {
     std::string asm_code;
     std::string segment = getArg1();
     int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+
+    asm_code += "@ARG\n";
+    asm_code += "D=M\n";      //store the segment base address into register D
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "D=A+D\n"; //D=segment base address + index
+    asm_code += "@R13\n"; //We must use R13-15 to help pop
+    asm_code += "M=D\n"; //store (segment base address + index) into R13
     
-    if(segment == "constant")
-    {
-        if(getCommandType() != C_PUSH)
-        {
-            std::cout << "no such command" << std::endl;
-            exit(-1);
-        }
-        
-        std::ostringstream oss;
-        oss << index;
-        asm_code += '@' + oss.str() + '\n';
-        asm_code += "D=A\n";
-        asm_code += "@SP\n";
-        asm_code += "A=M\n";
-        asm_code += "M=D\n";
-        asm_code += "@SP\n";
-        asm_code += "M=M+1\n";
-    }
+    asm_code += "@SP\n";
+    asm_code += "A=M-1\n";
+    asm_code += "D=M\n";  //pop the stack value into register D
+    
+    asm_code += "@R13\n";
+    asm_code += "A=M\n"; //A=segment base address + index
+    asm_code += "M=D\n"; //put the popped value into RAM[segment base address + index] 
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M-1\n"; //decrease SP by 1    
+   
     return asm_code;
 }
 
-std::string Parser::convertToAsmPop() const
+std::string Parser::convertToAsmPopLocal() const
 {
+    std::string asm_code;
+    std::string segment = getArg1();
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+
+    asm_code += "@LCL\n";
+    asm_code += "D=M\n";      //store the segment base address into register D
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "D=A+D\n"; //D=segment base address + index
+    asm_code += "@R13\n"; //We must use R13-15 to help pop
+    asm_code += "M=D\n"; //store (segment base address + index) into R13
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M-1\n";
+    asm_code += "D=M\n";  //pop the stack value into register D
+    
+    asm_code += "@R13\n";
+    asm_code += "A=M\n"; //A=segment base address + index
+    asm_code += "M=D\n"; //put the popped value into RAM[segment base address + index] 
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M-1\n"; //decrease SP by 1    
+   
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPopThis() const
+{
+    std::string asm_code;
+    std::string segment = getArg1();
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+
+    asm_code += "@THIS\n";
+    asm_code += "D=M\n";      //store the segment base address into register D
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "D=A+D\n"; //D=segment base address + index
+    asm_code += "@R13\n"; //We must use R13-15 to help pop
+    asm_code += "M=D\n"; //store (segment base address + index) into R13
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M-1\n";
+    asm_code += "D=M\n";  //pop the stack value into register D
+    
+    asm_code += "@R13\n";
+    asm_code += "A=M\n"; //A=segment base address + index
+    asm_code += "M=D\n"; //put the popped value into RAM[segment base address + index] 
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M-1\n"; //decrease SP by 1    
+   
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPopThat() const
+{
+    std::string asm_code;
+    std::string segment = getArg1();
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+
+    asm_code += "@THAT\n";
+    asm_code += "D=M\n";      //store the segment base address into register D
+    asm_code += ('@' + index_str + '\n'); //A=index
+    asm_code += "D=A+D\n"; //D=segment base address + index
+    asm_code += "@R13\n"; //We must use R13-15 to help pop
+    asm_code += "M=D\n"; //store (segment base address + index) into R13
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M-1\n";
+    asm_code += "D=M\n";  //pop the stack value into register D
+    
+    asm_code += "@R13\n";
+    asm_code += "A=M\n"; //A=segment base address + index
+    asm_code += "M=D\n"; //put the popped value into RAM[segment base address + index] 
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M-1\n"; //decrease SP by 1    
+   
+    return asm_code;
+}
+
+std::string Parser::convertToAsmPopTemp() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    if(index < 0 || index > 7)
+    {
+        std::cout << "index for temp segment is not in range [0,7]" << std::endl;
+        exit(-1);
+    }
+    std::ostringstream oss;
+    oss << (index + 5); //temp 0 = R5, temp 1 = R6, ..., temp 7 = R12
+    
+    asm_code += "@R" + oss.str() + '\n';
+    asm_code += "D=A\n"; // store the value RAM[temp index] into register D
+    asm_code += "@R13\n"; //We must use R13-15 to help pop
+    asm_code += "M=D\n"; //store the address into R13  
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M-1\n";
+    asm_code += "D=M\n";  //pop the stack into register D
+    
+    asm_code += "@R13\n";
+    asm_code += "A=M\n"; //A=temp index
+    asm_code += "M=D\n"; //put the popped value into RAM[temp index]
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M-1\n"; //decrease SP by 1     
+    
+    return asm_code;    
+}
+
+std::string Parser::convertToAsmPopPointer() const
+{
+    std::string asm_code;
+    int index = getArg2();
+
+    if(index == 0) //pop pointer 0
+    {
+        asm_code += "@SP\n";
+        asm_code += "A=M-1\n";
+        asm_code += "D=M\n";  //pop the stack into register D
+        
+        asm_code += "@THIS\n"; 
+        asm_code += "M=D\n"; //store the popped value into RAM[THIS] 
+    
+        asm_code += "@SP\n";
+        asm_code += "M=M-1\n"; //decrease SP by 1 
+    }
+    else if(index == 1) //pop pointer 1
+    {
+        asm_code += "@SP\n";
+        asm_code += "A=M-1\n";
+        asm_code += "D=M\n";  //pop the stack into register D
+        
+        asm_code += "@THAT\n"; 
+        asm_code += "M=D\n"; //store the popped value into RAM[THIS] 
+    
+        asm_code += "@SP\n";
+        asm_code += "M=M-1\n"; //decrease SP by 1 
+    }
+    else
+    {
+        std::cout << "index for pointer segment is not in range [0,1]" << std::endl;
+        exit(-1);        
+    }
+    
+    return asm_code;
+}
+
+
+std::string Parser::convertToAsmPopStatic() const
+{
+    std::string asm_code;
+    int index = getArg2();
+    std::ostringstream oss;
+    oss << index;
+    std::string index_str = oss.str();
+    
+    asm_code += ('@' + VM_file_name_ + '.' + index_str + '\n');
+    asm_code += "D=A\n";
+    asm_code += "@R13\n"; //We must use R13-15 to help pop
+    asm_code += "M=D\n"; //store the address into R13  
+    
+    asm_code += "@SP\n";
+    asm_code += "A=M-1\n";
+    asm_code += "D=M\n";  //pop the stack into register D
+        
+    asm_code += "@R13\n";
+    asm_code += "A=M\n"; //A=static variable address
+    asm_code += "M=D\n"; //put the popped value into RAM[static variable address]
+    
+    asm_code += "@SP\n";
+    asm_code += "M=M-1\n"; //decrease SP by 1   
+    
+    return asm_code;
 }
 
 std::string Parser::getArg1() const
