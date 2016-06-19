@@ -9,7 +9,7 @@
 ///initialize label_counter_
 int Parser::label_counter_ = 0;
 
-Parser::Parser(const std::string& code,const std::string& VM_file_name)
+Parser::Parser(const std::string& code,const std::string& VM_file_name, const std::string& function_name)
 {
     code_ = code;
     //the CPU emulator does not support symbol with '/' in the asm code
@@ -25,8 +25,14 @@ Parser::Parser(const std::string& code,const std::string& VM_file_name)
             VM_file_name_ += VM_file_name[i];
         }
     }
+    
+    function_name_ = function_name;
 }
 
+void Parser::setFunctionName(const std::string& function_name) 
+{
+    function_name_ = function_name;
+}
 
 bool Parser::isEmpty() const
 {
@@ -359,7 +365,7 @@ std::string Parser::convertToAsmLabel() const
     
     std::string symbol = getArg1();
     
-    asm_code += ( '(' + function_name_ + '$' + symbol + ')');
+    asm_code += ( '(' + function_name_ + '$' + symbol + ")\n");
     
     return asm_code;
 }
@@ -385,7 +391,7 @@ std::string Parser::convertToAsmIf() const
     std::string symbol_asm = function_name_ + '$' + symbol;
     
     asm_code += "@SP\n";
-    asm_code += "AM=M-1\n"; //decrease SP by 1
+    asm_code += "AM=M-1\n"; //remember to decrease SP by 1!
     asm_code += "D=M\n"; //get the topmost element of the stack into register D
     asm_code += '@' + symbol_asm + '\n';
     asm_code += "D; JNE\n";
@@ -396,6 +402,81 @@ std::string Parser::convertToAsmIf() const
 std::string Parser::convertToAsmCall() const
 {
     std::string asm_code;
+    std::string called_function_name = getArg1();
+    int n_arg = getArg2();
+    std::ostringstream oss;
+    oss << n_arg;
+    std::string n_arg_str = oss.str();
+    
+    std::string return_address = assignAsmLabel("return_address_" + function_name_ + "_call_" + called_function_name);
+    
+    //push return-address
+    asm_code += ('@' + return_address + '\n');
+    asm_code += "D=A\n";
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; 
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n";
+    
+    //push LCL
+    asm_code += "@LCL\n";
+    asm_code += "D=M\n";
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; 
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n";
+    
+    //push ARG
+    asm_code += "@ARG\n";
+    asm_code += "D=M\n";
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; 
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n";   
+    
+    //push THIS
+    asm_code += "@THIS\n";
+    asm_code += "D=M\n";
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; 
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n";     
+    
+    //push THAT
+    asm_code += "@THAT\n";
+    asm_code += "D=M\n";
+    asm_code += "@SP\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; 
+    asm_code += "@SP\n";
+    asm_code += "M=M+1\n";  
+
+    //ARG = SP-n-5
+    asm_code += "@SP\n";
+    asm_code += "D=M\n"; //D = *SP
+    asm_code += ('@' + n_arg_str + '\n');
+    asm_code += "D=D-A\n"; //D = *SP-n
+    asm_code += "@5\n";
+    asm_code += "D=D-A\n"; //D = *SP-n-5
+    asm_code += "@ARG\n";
+    asm_code += "M=D\n";
+    
+    //LCL=SP
+    asm_code += "@SP\n";
+    asm_code += "D=M\n";
+    asm_code += "@LCL\n";
+    asm_code += "M=D\n";
+    
+    //goto f
+    asm_code += ('@' + called_function_name + '\n');
+    asm_code += "0;JMP\n";
+
+    //label: (return-address)
+    asm_code += ('(' + return_address + ")\n");
     
     return asm_code;
 }
@@ -404,12 +485,94 @@ std::string Parser::convertToAsmReturn() const
 {
     std::string asm_code;
     
+    //put FRAME=LCL into R13, RET=*(FRAME-5) into R14
+    asm_code += "@LCL\n";
+    asm_code += "D=M\n";
+    asm_code += "@R13\n";
+    asm_code += "M=D\n"; //store FRAME into R13
+    
+    asm_code += "@5\n";
+    asm_code += "A=D-A\n"; // A = (FRAME-5) 
+    asm_code += "D=M\n"; //D = *(FRAME-5) 
+    asm_code += "@R14\n";
+    asm_code += "M=D\n"; //store RET into R14
+    
+    //*ARG = pop()
+    asm_code += "@SP\n";
+    asm_code += "AM=M-1\n";
+    asm_code += "D=M\n"; //store the topmost element into register D
+    asm_code += "@ARG\n";
+    asm_code += "A=M\n";
+    asm_code += "M=D\n"; //put the topmost element into RAM[*ARG]
+    
+    //SP = ARG + 1
+    asm_code += "@ARG\n";
+    asm_code += "D=M+1\n";
+    asm_code += "@SP\n";
+    asm_code += "M=D\n";
+    
+    //THAT = *(FRAME-1)
+    asm_code += "@R13\n";
+    asm_code += "A=M-1\n";
+    asm_code += "D=M\n";
+    asm_code += "@THAT\n";
+    asm_code += "M=D\n";
+    
+    //THIS = *(FRAME-2)    
+    asm_code += "@R13\n";
+    asm_code += "D=M\n";
+    asm_code += "@2\n";
+    asm_code += "A=D-A\n";
+    asm_code += "D=M\n";
+    asm_code += "@THIS\n";
+    asm_code += "M=D\n";
+    
+    // ARG = *(FRAME-3)    
+    asm_code += "@R13\n";
+    asm_code += "D=M\n";
+    asm_code += "@3\n";
+    asm_code += "A=D-A\n";
+    asm_code += "D=M\n";
+    asm_code += "@ARG\n";
+    asm_code += "M=D\n";
+    
+    // LCL = *(FRAME-4)    
+    asm_code += "@R13\n";
+    asm_code += "D=M\n";
+    asm_code += "@4\n";
+    asm_code += "A=D-A\n";
+    asm_code += "D=M\n";
+    asm_code += "@LCL\n";
+    asm_code += "M=D\n";
+    
+    //goto RET
+    asm_code += "@R14\n";
+    asm_code += "A=M\n";
+    asm_code += "0;JMP\n";
+    
     return asm_code;
 }
 
 std::string Parser::convertToAsmFunction() const
 {
     std::string asm_code;
+    
+    int n_local = getArg2();
+    
+    asm_code += ('(' + function_name_ + ")\n");
+    for(int i=0; i < n_local; ++i)
+    {
+        //push 0 into the stack (like push constant 0)
+        asm_code += "@0\n";
+        asm_code += "D=A\n"; //store the constant into register A
+        
+        asm_code += "@SP\n";
+        asm_code += "A=M\n";
+        asm_code += "M=D\n"; //push the constant into the stack
+        
+        asm_code += "@SP\n";
+        asm_code += "M=M+1\n"; //increase SP by 1  
+    }
     
     return asm_code;    
 }

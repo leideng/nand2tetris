@@ -18,12 +18,18 @@ VMTranslator::VMTranslator(const std::vector<std::string> & VM_input_files,
     std::ofstream ofs(asm_output_file_.c_str(), std::ofstream::out);
     
     //write the bootstrap code into the beginning of the output asm file
-/*     ofs << "@256\n" 
+    //   SP=256
+    //   call Sys.init
+    //Here when we call Sys.init, we should have the same procedure of common call
+    //For simplicity, we only increase SP by 5, i.e., we set the following bootstrap code
+    //   SP=261
+    //   goto Sys.init
+    ofs << "@261\n" 
         << "D=A\n"
         << "@SP\n"
         << "M=D\n"
         << "@Sys.init\n"
-        << "0;JMP\n"; */
+        << "0;JMP\n\n";
 }
 
 void VMTranslator::translate()
@@ -48,12 +54,14 @@ void VMTranslator::translateSingleVMFile(const std::string& VM_input_file)
     std::ofstream ofs(asm_output_file_.c_str(), std::ofstream::app);
     
     std::string buffer;
+    std::string current_function_name; //the current function name where the current VM command locates
     while(std::getline(ifs, buffer))
     {
-        Parser parser(buffer, VM_input_file);
+        Parser parser(buffer, VM_input_file, current_function_name);
         
         parser.removeComments();
         parser.removeLeadingAndEndingWhiteSpace();
+       
 
         //do not handle empty VM code (comment line)
         if(parser.isEmpty())
@@ -63,7 +71,15 @@ void VMTranslator::translateSingleVMFile(const std::string& VM_input_file)
         }
         else
         {
+            //it is a little tricky to handle current function name here
+            if(parser.getCommandType() == Parser::C_FUNCTION)
+            {
+                current_function_name = parser.getArg1(); //update current_function_name
+                parser.setFunctionName(current_function_name); //reset function name for the parser
+            }
+        
             std::string asm_code = parser.convertToAsm();
+            ofs << "//" + buffer << std::endl; //write the original VM code as a comment line
             ofs << asm_code << std::endl;
         } 
         buffer.clear();

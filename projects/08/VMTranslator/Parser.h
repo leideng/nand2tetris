@@ -23,7 +23,9 @@ class Parser
     };
     
     ///constructor
-    Parser(const std::string& code, const std::string& VM_file_name);
+    Parser(const std::string& code, const std::string& VM_file_name, const std::string& function_name = std::string());
+    
+    void setFunctionName(const std::string& function_name);
     
     ///remove the leading white space and ending white space of the single-line code
     ///update code_
