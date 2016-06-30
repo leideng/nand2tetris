@@ -19,24 +19,15 @@
 <keyword> let </keyword>
 <identifier> square </identifier>
 <symbol> = </symbol>
-<identifier> Square </identifier>
-<symbol> . </symbol>
-<identifier> new </identifier>
-<symbol> ( </symbol>
-<integerConstant> 0</integerConstant>
-<symbol> , </symbol>
-<integerConstant> 0</integerConstant>
-<symbol> , </symbol>
-<integerConstant> 30</integerConstant>
-<symbol> ) </symbol>
+<identifier> square </identifier>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 0</integerConstant>
+<identifier> direction </identifier>
 <symbol> ; </symbol>
 <keyword> return </keyword>
-<keyword> this </keyword>
+<identifier> square </identifier>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> method </keyword>
@@ -57,7 +48,7 @@
 <symbol> . </symbol>
 <identifier> deAlloc </identifier>
 <symbol> ( </symbol>
-<keyword> this </keyword>
+<identifier> square </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> return </keyword>
@@ -80,29 +71,22 @@
 <keyword> let </keyword>
 <identifier> exit </identifier>
 <symbol> = </symbol>
-<keyword> false </keyword>
+<identifier> key </identifier>
 <symbol> ; </symbol>
 <keyword> while </keyword>
 <symbol> ( </symbol>
-<symbol> ~ </symbol>
 <identifier> exit </identifier>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> while </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 0</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<identifier> Keyboard </identifier>
-<symbol> . </symbol>
-<identifier> keyPressed </identifier>
-<symbol> ( </symbol>
-<symbol> ) </symbol>
+<identifier> key </identifier>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> moveSquare </identifier>
@@ -113,21 +97,17 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 81</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> exit </identifier>
 <symbol> = </symbol>
-<keyword> true </keyword>
+<identifier> exit </identifier>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 90</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -141,8 +121,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 88</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -156,73 +134,56 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 131</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 1</integerConstant>
+<identifier> exit </identifier>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 133</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 2</integerConstant>
+<identifier> key </identifier>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 130</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 3</integerConstant>
+<identifier> square </identifier>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 132</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 4</integerConstant>
+<identifier> direction </identifier>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> while </keyword>
 <symbol> ( </symbol>
-<symbol> ~ </symbol>
-<symbol> ( </symbol>
 <identifier> key </identifier>
-<symbol> = </symbol>
-<integerConstant> 0</integerConstant>
-<symbol> ) </symbol>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<identifier> Keyboard </identifier>
-<symbol> . </symbol>
-<identifier> keyPressed </identifier>
-<symbol> ( </symbol>
-<symbol> ) </symbol>
+<identifier> key </identifier>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> moveSquare </identifier>
@@ -243,8 +204,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> direction </identifier>
-<symbol> = </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -258,8 +217,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> direction </identifier>
-<symbol> = </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -273,8 +230,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> direction </identifier>
-<symbol> = </symbol>
-<integerConstant> 3</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -288,8 +243,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> direction </identifier>
-<symbol> = </symbol>
-<integerConstant> 4</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -305,7 +258,7 @@
 <symbol> . </symbol>
 <identifier> wait </identifier>
 <symbol> ( </symbol>
-<integerConstant> 5</integerConstant>
+<identifier> direction </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> return </keyword>

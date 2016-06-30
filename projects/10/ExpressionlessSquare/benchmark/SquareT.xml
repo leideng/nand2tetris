@@ -47,7 +47,7 @@
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> return </keyword>
-<keyword> this </keyword>
+<identifier> x </identifier>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> method </keyword>
@@ -61,7 +61,7 @@
 <symbol> . </symbol>
 <identifier> deAlloc </identifier>
 <symbol> ( </symbol>
-<keyword> this </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> return </keyword>
@@ -78,7 +78,7 @@
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> true </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -91,12 +91,8 @@
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> return </keyword>
@@ -113,7 +109,7 @@
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> false </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -126,12 +122,8 @@
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> return </keyword>
@@ -145,25 +137,7 @@
 <symbol> { </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
-<symbol> ( </symbol>
-<symbol> ( </symbol>
-<identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> &lt; </symbol>
-<integerConstant> 254</integerConstant>
-<symbol> ) </symbol>
-<symbol> &amp; </symbol>
-<symbol> ( </symbol>
-<symbol> ( </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> &lt; </symbol>
-<integerConstant> 510</integerConstant>
-<symbol> ) </symbol>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -175,8 +149,6 @@
 <identifier> size </identifier>
 <symbol> = </symbol>
 <identifier> size </identifier>
-<symbol> + </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> draw </identifier>
@@ -196,8 +168,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> size </identifier>
-<symbol> &gt; </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -209,8 +179,6 @@
 <identifier> size </identifier>
 <symbol> = </symbol>
 <identifier> size </identifier>
-<symbol> - </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> draw </identifier>
@@ -230,8 +198,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> y </identifier>
-<symbol> &gt; </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -239,7 +205,7 @@
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> false </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -249,36 +215,24 @@
 <symbol> ( </symbol>
 <identifier> x </identifier>
 <symbol> , </symbol>
-<symbol> ( </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> - </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> y </identifier>
 <symbol> = </symbol>
 <identifier> y </identifier>
-<symbol> - </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> Screen </identifier>
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> true </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -291,12 +245,8 @@
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <symbol> } </symbol>
@@ -311,13 +261,7 @@
 <symbol> { </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
-<symbol> ( </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> &lt; </symbol>
-<integerConstant> 254</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -325,7 +269,7 @@
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> false </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -338,27 +282,21 @@
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> y </identifier>
 <symbol> = </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> Screen </identifier>
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> true </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -368,21 +306,11 @@
 <symbol> ( </symbol>
 <identifier> x </identifier>
 <symbol> , </symbol>
-<symbol> ( </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> - </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <symbol> } </symbol>
@@ -398,8 +326,6 @@
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> x </identifier>
-<symbol> &gt; </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -407,7 +333,7 @@
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> false </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -415,38 +341,26 @@
 <symbol> . </symbol>
 <identifier> drawRectangle </identifier>
 <symbol> ( </symbol>
-<symbol> ( </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> - </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> , </symbol>
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> x </identifier>
 <symbol> = </symbol>
 <identifier> x </identifier>
-<symbol> - </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> Screen </identifier>
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> true </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -459,12 +373,8 @@
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <symbol> } </symbol>
@@ -479,13 +389,7 @@
 <symbol> { </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
-<symbol> ( </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> &lt; </symbol>
-<integerConstant> 510</integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -493,7 +397,7 @@
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> false </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -506,27 +410,21 @@
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> x </identifier>
 <symbol> = </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<integerConstant> 2</integerConstant>
 <symbol> ; </symbol>
 <keyword> do </keyword>
 <identifier> Screen </identifier>
 <symbol> . </symbol>
 <identifier> setColor </identifier>
 <symbol> ( </symbol>
-<keyword> true </keyword>
+<identifier> x </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> do </keyword>
@@ -534,23 +432,13 @@
 <symbol> . </symbol>
 <identifier> drawRectangle </identifier>
 <symbol> ( </symbol>
-<symbol> ( </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
-<symbol> ) </symbol>
-<symbol> - </symbol>
-<integerConstant> 1</integerConstant>
 <symbol> , </symbol>
 <identifier> y </identifier>
 <symbol> , </symbol>
 <identifier> x </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> , </symbol>
 <identifier> y </identifier>
-<symbol> + </symbol>
-<identifier> size </identifier>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <symbol> } </symbol>

@@ -45,7 +45,7 @@
 <keyword> let </keyword>
 <identifier> i </identifier>
 <symbol> = </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> ; </symbol>
 <keyword> while </keyword>
 <symbol> ( </symbol>
@@ -72,18 +72,18 @@
 <symbol> = </symbol>
 <identifier> i </identifier>
 <symbol> + </symbol>
-<integerConstant> 1</integerConstant>
+<integerConstant> 1 </integerConstant>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> let </keyword>
 <identifier> i </identifier>
 <symbol> = </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> sum </identifier>
 <symbol> = </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> ; </symbol>
 <keyword> while </keyword>
 <symbol> ( </symbol>
@@ -107,7 +107,7 @@
 <symbol> = </symbol>
 <identifier> i </identifier>
 <symbol> + </symbol>
-<integerConstant> 1</integerConstant>
+<integerConstant> 1 </integerConstant>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> do </keyword>

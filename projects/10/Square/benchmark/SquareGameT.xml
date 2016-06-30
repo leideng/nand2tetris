@@ -23,17 +23,17 @@
 <symbol> . </symbol>
 <identifier> new </identifier>
 <symbol> ( </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> , </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> , </symbol>
-<integerConstant> 30</integerConstant>
+<integerConstant> 30 </integerConstant>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> ; </symbol>
 <keyword> return </keyword>
 <keyword> this </keyword>
@@ -92,7 +92,7 @@
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
@@ -114,7 +114,7 @@
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 81</integerConstant>
+<integerConstant> 81 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
@@ -127,7 +127,7 @@
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 90</integerConstant>
+<integerConstant> 90 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -142,7 +142,7 @@
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 88</integerConstant>
+<integerConstant> 88 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -157,52 +157,52 @@
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 131</integerConstant>
+<integerConstant> 131 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 1</integerConstant>
+<integerConstant> 1 </integerConstant>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 133</integerConstant>
+<integerConstant> 133 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 2</integerConstant>
+<integerConstant> 2 </integerConstant>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 130</integerConstant>
+<integerConstant> 130 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 3</integerConstant>
+<integerConstant> 3 </integerConstant>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> if </keyword>
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 132</integerConstant>
+<integerConstant> 132 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> let </keyword>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 4</integerConstant>
+<integerConstant> 4 </integerConstant>
 <symbol> ; </symbol>
 <symbol> } </symbol>
 <keyword> while </keyword>
@@ -211,7 +211,7 @@
 <symbol> ( </symbol>
 <identifier> key </identifier>
 <symbol> = </symbol>
-<integerConstant> 0</integerConstant>
+<integerConstant> 0 </integerConstant>
 <symbol> ) </symbol>
 <symbol> ) </symbol>
 <symbol> { </symbol>
@@ -244,7 +244,7 @@
 <symbol> ( </symbol>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 1</integerConstant>
+<integerConstant> 1 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -259,7 +259,7 @@
 <symbol> ( </symbol>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 2</integerConstant>
+<integerConstant> 2 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -274,7 +274,7 @@
 <symbol> ( </symbol>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 3</integerConstant>
+<integerConstant> 3 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -289,7 +289,7 @@
 <symbol> ( </symbol>
 <identifier> direction </identifier>
 <symbol> = </symbol>
-<integerConstant> 4</integerConstant>
+<integerConstant> 4 </integerConstant>
 <symbol> ) </symbol>
 <symbol> { </symbol>
 <keyword> do </keyword>
@@ -305,7 +305,7 @@
 <symbol> . </symbol>
 <identifier> wait </identifier>
 <symbol> ( </symbol>
-<integerConstant> 5</integerConstant>
+<integerConstant> 5 </integerConstant>
 <symbol> ) </symbol>
 <symbol> ; </symbol>
 <keyword> return </keyword>
