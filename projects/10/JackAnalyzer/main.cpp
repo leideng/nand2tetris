@@ -34,6 +34,10 @@ int main(int argc, char** argv)
         
         //the xml file after tokenizing and parsing
         string xml_parser_file = jack_file.substr(0, jack_file.size()-5) + ".xml";
+        
+        JackParser parser(txt_token_file, xml_parser_file);
+        
+        parser.run();
     }
     return 0;
 }
