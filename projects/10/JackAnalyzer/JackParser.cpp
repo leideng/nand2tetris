@@ -520,8 +520,27 @@ void JackParser::parseExpression()
     //write the label "<expression>"
     xml_file_ofs_ << "<expression>" << endl; 
     
+    //parse term
     parseTerm();
     
+    while(getClassification() == "symbol" &&
+       (getString() == "+" ||
+        getString() == "-" ||
+        getString() == "*" ||
+        getString() == "/" ||
+        getString() == "&" ||
+        getString() == "|" ||
+        getString() == "<" ||
+        getString() == ">" ||
+        getString() == "="))
+    {
+        //write the operator (symbol)
+        writeSymbol(getString());
+        cur_idx_++;
+        
+        //parse term
+        parseTerm();
+    }
     //write the label "</expression>"
     xml_file_ofs_ << "</expression>" << endl; 
     
@@ -532,10 +551,107 @@ void JackParser::parseTerm()
 {
     //write the label "<term>"
     xml_file_ofs_ << "<term>" << endl; 
-    
-    //write the identifier
-    writeIdentifier(getString());
-    cur_idx_++;
+     
+    if(getClassification() == "integerConstant")
+    {
+        writeIntegerConstant(getString());
+        cur_idx_++;
+    }
+    else if(getClassification() == "stringConstant")
+    {
+        writeStringConstant(getString());
+        cur_idx_++;
+    }
+    else if(getClassification() == "keyword" &&
+            (getString() == "true" ||
+             getString() == "false" ||
+             getString() == "null" ||
+             getString() == "this"))
+    {
+        writeKeyword(getString());
+        cur_idx_++;
+    }
+    else if(getClassification() == "identifier") //could be varName or subroutineCall
+    {
+        //judge whether it is a subroutineCall by looking-ahead
+        int index_temp = cur_idx_;
+        bool isSubroutineCall = false;
+        
+        if(tokens_vv_[index_temp+1][0] == "symbol" &&
+           tokens_vv_[index_temp+1][1] == "(")
+        {
+            isSubroutineCall = true;
+        }
+        else if(tokens_vv_[index_temp+1][0] == "symbol" &&
+                tokens_vv_[index_temp+1][1] == ".")
+        {
+            if(tokens_vv_[index_temp+2][0] == "identifier" &&
+               tokens_vv_[index_temp+3][0] == "symbol" &&
+               tokens_vv_[index_temp+3][1] == "(")
+            {
+                isSubroutineCall = true;
+            }
+        }
+        else
+        {
+            //do nothing
+        }
+        
+        if(isSubroutineCall)
+        {
+            parseSubroutineCall();
+        }
+        else
+        {
+            //write varName
+            writeIdentifier(getString());
+            cur_idx_++;
+            
+            if(getClassification() == "symbol" &&
+               getString() == "[")
+            {
+                //write the symbol "["
+                writeSymbol(getString());
+                cur_idx_++;
+                
+                //parse the expression
+                parseExpression();
+                
+                //write the symbol "]"
+                writeSymbol(getString());
+                cur_idx_++;
+            }
+        }
+    }
+    else if(getClassification() == "symbol" && getString() == "(")
+    {
+        //write the symbol "("
+        writeSymbol(getString());
+        cur_idx_++;
+        
+        //parse the expression
+        parseExpression();
+        
+        //write the symbol ")"
+        writeSymbol(getString());
+        cur_idx_++;
+    }
+    else if(getClassification() == "symbol" &&
+            (getString() == "-" || getString() == "~"))
+    {
+        //write the unary operator
+        writeSymbol(getString());
+        cur_idx_++;
+        
+        //parse the term
+        parseTerm();
+    }
+    else
+    {
+        cout << "cannot handle such term: getClassification()=" << getClassification()
+             << ", getString()=" << getString() << endl;
+        exit(-1);
+    }
     
     //write the label "</term>"
     xml_file_ofs_ << "</term>" << endl;
@@ -576,7 +692,27 @@ void JackParser::writeKeyword(string s)
 
 void JackParser::writeSymbol(string s)
 {
-    xml_file_ofs_ << "<symbol> " << s  << " </symbol>" << endl;
+    
+    if(s == "<")
+    {
+        xml_file_ofs_ << "<symbol> &lt; </symbol>" << endl;
+    }
+    else if(s == ">")
+    {
+        xml_file_ofs_ << "<symbol> &gt; </symbol>" << endl;
+    }
+    else if(s == "\"")
+    {
+        xml_file_ofs_ << "<symbol> &quot; </symbol>" << endl;
+    }
+    else if(s == "&")
+    {
+        xml_file_ofs_ << "<symbol> &amp; </symbol>" << endl;
+    }
+    else
+    {
+        xml_file_ofs_ << "<symbol> " << s  << " </symbol>" << endl;
+    }
     return;
 }
 
