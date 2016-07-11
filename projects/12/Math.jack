@@ -6,33 +6,221 @@
 /**
  * A basic math library.
  */
-class Math {
+class Math 
+{
+
+    static Array twoToThePower_; //an array to store: 2^0, 2^1, 2^2, ..., -2^15 in 2's complement
 
     /** Initializes the library. */
-    function void init() {
+    //this should be called once at Sys.init() function
+    function void init() 
+    {
+        let twoToThePower_ = Array.new(16);    
+        
+        let twoToThePower_[0] = 1;       //     1 = 0000 0000 0000 0001  
+        let twoToThePower_[1] = 2;       //     2 = 0000 0000 0000 0010 
+        let twoToThePower_[2] = 4;       //     4 = 0000 0000 0000 0100 
+        let twoToThePower_[3] = 8;       //     8 = 0000 0000 0000 1000 
+        let twoToThePower_[4] = 16;      //    16 = 0000 0000 0001 0000 
+        let twoToThePower_[5] = 32;      //    32 = 0000 0000 0010 0000 
+        let twoToThePower_[6] = 64;      //    64 = 0000 0000 0100 0000 
+        let twoToThePower_[7] = 128;     //   128 = 0000 0000 1000 0000 
+        let twoToThePower_[8] = 256;     //   256 = 0000 0001 0000 0000 
+        let twoToThePower_[9] = 512;     //   512 = 0000 0010 0000 0000 
+        let twoToThePower_[10] = 1024;   //  1024 = 0000 0100 0000 0000  
+        let twoToThePower_[11] = 2048;   //  2048 = 0000 1000 0000 0000  
+        let twoToThePower_[12] = 4096;   //  4096 = 0001 0000 0000 0000 
+        let twoToThePower_[13] = 8192;   //  8192 = 0010 0000 0000 0000  
+        let twoToThePower_[14] = 16384;  // 16384 = 0100 0000 0000 0000 
+        //let twoToThePower_[15] = -32768; //-32768 = 1000 0000 0000 0000
+        //32768 is an integer constant larger than 32767 = 0111 1111 1111 1111, 
+        //thus, 32768 cannot be handled by the (hardware-level) A-instruction (@value) (see Chapter 4.2.2)
+        //We should load constant 32767 first, and then do some calculation to get -32768
+        let twoToThePower_[15] = -32767;
+        let twoToThePower_[15] = twoToThePower_[15] - 1;
+        
+        return;
     }
 
     /** Returns the absolute value of x. */
-    function int abs(int x) {
+    function int abs(int x) 
+    {
+        if(x > 0)  //Jack language does not have ">=" operator
+        {
+            return x;
+        }
+        return -x;
     }
 
     /** Returns the product of x and y. */
-    function int multiply(int x, int y) {
+    //The key property used to reduce complexity is: 
+    //  a binary number multiplies 2=(10)_b is equal to left-shift this binary number, e.g., 5*2 = 10, (101*10=1010)_b
+    //  similarly, a decimal number multiplies 10 is equal to left-shift this decimal number, e.g., 213*10=2130
+    //Thus, for example, the algorithm works as follows: (1010*111=1010*1 + 10100*1 + 101000*1)_b, 123*456=123*6+1230*5+12300*4
+    //@note In 2's complement, we do not need to differentiate positive and negative x and y   
+    function int multiply(int x, int y) 
+    {
+        var int sum; //the returned value
+        var int shifted_x; //left shift of x 
+        var int j; //the j-th bit of y
+        
+        let shifted_x = x;
+        let sum = 0;
+        let j = 0;
+        
+        while(j < 16) //in our Hack platform, an integer is represented as 16-bit
+        {
+            if(Math.bit(y,j))
+            {
+                let sum = sum + shifted_x;
+            }
+            let shifted_x = Math.leftShift(shifted_x,1);
+            let j = j + 1;
+        }
+        return sum;
     }
 
     /** Returns the integer part of x/y. */
-    function int divide(int x, int y) {
+    //the definition of the division of positive x and y is well-defined, e.g., 5/2=2 since (5=2*2+1 where 1 \in [0,2))
+    //However, it is not well-defined for (-5)/2, 5/(-2)
+    //In this function, we assume (-5)/2 = -(5/2), 5/(-2) = -(5/2)
+    function int divide(int x, int y) 
+    {
+        var int q;
+        var int r;
+        
+        if(y = 0)
+        {
+            do Sys.error(0); //we do not have an error-code specification, thus assign an arbitrary 0
+        }
+        
+        if(y < 0)
+        {
+            if(x > 0)
+            {
+                return -(Math.divide(x, -y));
+            }
+            else
+            {
+                return Math.divide(-x, -y);
+            }
+        }
+        
+        //y > 0 now
+        if(x < 0)
+        {
+            return -(Math.divide(-x,y));
+        }
+        
+        //y>0 and x >=0 now
+        if(x < y)
+        {
+            return 0;
+        }
+        
+        //x >= y > 0 now
+        
+        if(Math.bit(2*y, 15)) //overflow for 2*y
+        {
+            //thus 2*y > x >= y, and thus x/y = 1
+            return 1;
+        }
+        
+        // x = q*(2y) + r, where r \in [0,2y)
+        // if r \in [0,y), then we get x/y=2q
+        // otherwise if r >= y, we also have x = (2q+1)y + (r-y), where (r-y) \in [0,y)
+        let q = Math.divide(x, 2*y);
+        let r = x - (q*(2*y));
+        if(r < y)
+        {
+            return 2*q;
+        }
+        else
+        {
+            return (2*q)+1;
+        }
     }
 
     /** Returns the integer part of the square root of x. */
-    function int sqrt(int x) {
+    function int sqrt(int x) 
+    {
+        var int y;
+        var int j;
+        var int square;
+        
+        if(x < 0)
+        {
+            do Sys.error(0);
+        }
+        
+        if(x = 0)
+        {
+            return 0;
+        }
+        
+        let y = 0;
+        let j = 7;
+        //do binary search over [0, 2^8-1]
+        while( ~(j<0) ) //j >= 0
+        {
+            let square = (y+twoToThePower_[j])*(y+twoToThePower_[j]);
+            if( (~Math.bit(square,15)) &  (~( square > x)) ) //we need to see whether square overflows
+            {
+                let y = y + twoToThePower_[j];
+            }
+            let j = j-1;
+        }
+        
+        return y;
     }
 
     /** Returns the greater number. */
-    function int max(int a, int b) {
+    function int max(int a, int b) 
+    {
+        if(a > b)
+        {
+            return a;
+        }
+        return b;
     }
 
     /** Returns the smaller number. */
-    function int min(int a, int b) {
+    function int min(int a, int b) 
+    {
+        if(a < b)
+        {
+            return a;
+        }
+        return b;
+    }
+    
+    /** Return true if the i-th bit of the integer x is 1 */
+    // i=0,1,...,15
+    function bool bit(int x, int i)
+    {
+        if( (x & twoToThePower_[i]) = 0)
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    /** Return the result that x is left shifted num times */
+    //Note that left shift once is equal to multiply by 2, which is further 
+    //equal to add a number to itself, i.e., leftShift(x,1) = x*2 = x+x    
+    function int leftShift(int x, int num)
+    {
+        var int ret; //the retuned result
+        var int i; 
+        let ret = x;
+        let i = 0;
+        
+        while(i < num)
+        {
+            let ret = ret + ret;
+            let i = i+1;
+        }
+        
+        return ret;
     }
 }
