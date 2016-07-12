@@ -239,13 +239,13 @@ class String
     /** Returns the new line character. */
     function char newLine() 
     {
-        return 128; //ASCII code for newline is 10, but Jack uses 128
+        return 128; //ASCII code for newline is 10, but Jack uses 128, see Figure 4.6 in the book
     }
 
     /** Returns the backspace character. */
     function char backSpace() 
     {
-        return 129; //ASCII code for backspace is 8, but Jack uses 129
+        return 129; //ASCII code for backspace is 8, but Jack uses 129, see Figure 4.6 in the book
     }
 
     /** Returns the double quote (") character. */

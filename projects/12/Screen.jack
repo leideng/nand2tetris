@@ -9,32 +9,95 @@
 class Screen {
 
     /** Initializes the Screen. */
-    function void init() {
+    function void init() 
+    {
+        let twoToThePower_ = Array.new(16);    
+        
+        let twoToThePower_[0] = 1;       //     1 = 0000 0000 0000 0001  
+        let twoToThePower_[1] = 2;       //     2 = 0000 0000 0000 0010 
+        let twoToThePower_[2] = 4;       //     4 = 0000 0000 0000 0100 
+        let twoToThePower_[3] = 8;       //     8 = 0000 0000 0000 1000 
+        let twoToThePower_[4] = 16;      //    16 = 0000 0000 0001 0000 
+        let twoToThePower_[5] = 32;      //    32 = 0000 0000 0010 0000 
+        let twoToThePower_[6] = 64;      //    64 = 0000 0000 0100 0000 
+        let twoToThePower_[7] = 128;     //   128 = 0000 0000 1000 0000 
+        let twoToThePower_[8] = 256;     //   256 = 0000 0001 0000 0000 
+        let twoToThePower_[9] = 512;     //   512 = 0000 0010 0000 0000 
+        let twoToThePower_[10] = 1024;   //  1024 = 0000 0100 0000 0000  
+        let twoToThePower_[11] = 2048;   //  2048 = 0000 1000 0000 0000  
+        let twoToThePower_[12] = 4096;   //  4096 = 0001 0000 0000 0000 
+        let twoToThePower_[13] = 8192;   //  8192 = 0010 0000 0000 0000  
+        let twoToThePower_[14] = 16384;  // 16384 = 0100 0000 0000 0000 
+        //let twoToThePower_[15] = -32768; //-32768 = 1000 0000 0000 0000
+        //32768 is an integer constant larger than 32767 = 0111 1111 1111 1111, 
+        //thus, 32768 cannot be handled by the (hardware-level) A-instruction (@value) (see Chapter 4.2.2)
+        //We should load constant 32767 first, and then do some calculation to get -32768
+        let twoToThePower_[15] = -32767;
+        let twoToThePower_[15] = twoToThePower_[15] - 1;
+        
+        return;
+        
     }
 
     /** Erases the whole screen. */
-    function void clearScreen() {
+    function void clearScreen() 
+    {
+        var int mem; 
+        let mem = 16384;
+        while(men < 24576)
+        {
+            Memory.poke(mem, 0);
+        }
+        return;
     }
 
     /** Sets the color to be used in further draw commands
      *  where white = false, black = true. */
-    function void setColor(boolean b) {
+    function void setColor(boolean b) 
+    {
     }
 
     /** Draws the (x, y) pixel. */
-    function void drawPixel(int x, int y) {
+    function void drawPixel(int x, int y) 
+    {
+        var int mem;
+        var int reminder;
+        
+        let mem = 16384 + (x*32) + (y/16);
+        let reminder = y - ((y/16)*16); // y%16
+        
+        Memory.poke(mem,  (Memory.peak(mem)) | (twoToThePower_[reminder]) );
+        
+        return;
     }
 
+    /** Clear the (x,y) pixel */
+    function void clearPixel(int x, int y)
+    {
+        var int mem;
+        var int reminder;
+        
+        let mem = 16384 + (x*32) + (y/16);
+        let reminder = y - ((y/16)*16); // y%16
+        
+        Memory.poke(mem,  (Memory.peak(mem)) & (~(twoToThePower_[reminder])) );
+        
+        return;    
+    }
+    
     /** Draws a line from (x1, y1) to (x2, y2). */
-    function void drawLine(int x1, int y1, int x2, int y2) {
+    function void drawLine(int x1, int y1, int x2, int y2) 
+    {
     }
 
     /** Draws a filled rectangle where the top left corner
      *  is (x1, y1) and the bottom right corner is (x2, y2). */
-    function void drawRectangle(int x1, int y1, int x2, int y2) {
+    function void drawRectangle(int x1, int y1, int x2, int y2) 
+    {
     }
 
     /** Draws a filled circle of radius r around (cx, cy). */
-    function void drawCircle(int cx, int cy, int r) {
+    function void drawCircle(int cx, int cy, int r) 
+    {
     }
 }
