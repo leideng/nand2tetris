@@ -6,8 +6,12 @@
 /**
  * Graphic screen library.
  */
-class Screen {
-
+class Screen 
+{
+    
+    static Array twoToThePower_;
+    static bool is_black_; //is_black_ = true means black, otherwise white
+    
     /** Initializes the Screen. */
     function void init() 
     {
@@ -35,6 +39,7 @@ class Screen {
         let twoToThePower_[15] = -32767;
         let twoToThePower_[15] = twoToThePower_[15] - 1;
         
+        let is_black_ = true; //initialize as true 
         return;
         
     }
@@ -44,60 +49,217 @@ class Screen {
     {
         var int mem; 
         let mem = 16384;
-        while(men < 24576)
+        while(mem < 24576)
         {
-            Memory.poke(mem, 0);
+            do Memory.poke(mem, 0);
         }
         return;
     }
+    
+    /** Fill the whole screen. */
+    function void fillScreen() 
+    {
+        var int mem; 
+        let mem = 16384;
+        while(mem < 24576)
+        {
+            do Memory.poke(mem, -1);
+        }
+        return;
+    }
+    
 
     /** Sets the color to be used in further draw commands
      *  where white = false, black = true. */
     function void setColor(boolean b) 
     {
+        let is_black_ = b;
+        return;
     }
 
     /** Draws the (x, y) pixel. */
+    //x is the column, and y is the row
     function void drawPixel(int x, int y) 
     {
         var int mem;
         var int reminder;
         
-        let mem = 16384 + (x*32) + (y/16);
-        let reminder = y - ((y/16)*16); // y%16
+        let mem = 16384 + (y*32) + (x/16);
+        let reminder = x - ((x/16)*16); // x%16
         
-        Memory.poke(mem,  (Memory.peak(mem)) | (twoToThePower_[reminder]) );
-        
+        if(is_black_)
+        {
+            do Memory.poke(mem,  (Memory.peek(mem)) | (twoToThePower_[reminder]) );
+        }
+        else
+        {
+            do Memory.poke(mem,  (Memory.peek(mem)) & (~(twoToThePower_[reminder])) );
+        }
         return;
     }
 
-    /** Clear the (x,y) pixel */
-    function void clearPixel(int x, int y)
-    {
-        var int mem;
-        var int reminder;
-        
-        let mem = 16384 + (x*32) + (y/16);
-        let reminder = y - ((y/16)*16); // y%16
-        
-        Memory.poke(mem,  (Memory.peak(mem)) & (~(twoToThePower_[reminder])) );
-        
-        return;    
-    }
     
     /** Draws a line from (x1, y1) to (x2, y2). */
     function void drawLine(int x1, int y1, int x2, int y2) 
     {
+        var int dx;
+        var int dy;
+        var int i;
+        var int a;
+        var int b;
+        var int ady_minus_bdx;
+        
+        let dx = x2 - x1;
+        let dy = y2- y1;
+        
+        //dx = 0, draw a horizontal line
+        if(dx = 0)
+        {
+            if(dy > 0)
+            {
+                let i = y1;
+                while(i < (y2 + 1))
+                {
+                    do Screen.drawPixel(x1, i);
+                    let i = i + 1;
+                }
+            }
+            else //dy <= 0
+            {
+                let i = y1;
+                while(i > (y2 - 1))
+                {
+                    do Screen.drawPixel(x2, i);
+                    let i = i-1;
+                }
+            }
+            return;
+        }
+        
+        //dy = 0, draw a vertical line
+        if(dy = 0) 
+        {
+            if(dx > 0)
+            {
+                let i = x1;
+                while(i < (x2 + 1) )
+                {
+                    do Screen.drawPixel(i, y1);
+                    let i = i + 1;
+                }
+            }
+            else //dx <= 0
+            {
+                let i = x1;
+                while(i > (x2 - 1))
+                {
+                    do Screen.drawPixel(i, y1);
+                    let i = i-1;
+                }
+            }
+            return;
+        }
+        
+        //dx > 0, dy > 0, see Figure 12.8a for the algorithm outline
+        if( (dx > 0) & (dy > 0) )
+        {
+            let a = 0;
+            let b = 0;
+            let ady_minus_bdx = 0;
+            while( (a < (dx + 1)) & (b < (dy + 1)) )
+            {
+                do Screen.drawPixel(x1+a, y1+b);
+                if(ady_minus_bdx < 0) //ady_minus_bdx is always in the range [-dx, dy], and thus will not overflowed
+                {
+                    let a = a + 1;
+                    let ady_minus_bdx = ady_minus_bdx + dy;
+                }
+                else
+                {
+                    let b = b + 1;
+                    let ady_minus_bdx = ady_minus_bdx - dx;
+                }
+            }
+            return;
+        }
+        
+        //dx > 0, dy < 0
+        if( (dx > 0) & (dy < 0) )
+        {
+            let a = 0;
+            let b = 0;
+            let ady_minus_bdx = 0;
+            while( (a < (dx + 1)) & (b < ((-dy) + 1)) )
+            {
+                do Screen.drawPixel(x1+a, y1-b);
+                if(ady_minus_bdx < 0) //ady_minus_bdx is always in the range [-dx, -dy], and thus will not overflowed
+                {
+                    let a = a + 1;
+                    let ady_minus_bdx = ady_minus_bdx + (-dy); //be careful here, it is to add (-dy)>0
+                }
+                else
+                {
+                    let b = b + 1;
+                    let ady_minus_bdx = ady_minus_bdx - dx;
+                }
+            }
+            return;
+        }
+        
+        //dx < 0, dy > 0
+        if( (dx < 0) & (dy > 0) )
+        {
+            do Screen.drawLine(x2,y2,x1,y1); //make dx > 0 and dy < 0
+            return;
+        }
+        
+        //dx < 0, dy < 0
+        if( (dx < 0) & (dy < 0) )
+        {
+            do Screen.drawLine(x2,y2,x1,y1); //make dx > 0 and dy > 0
+            return;
+        }
+
+        return; //fake return
     }
 
     /** Draws a filled rectangle where the top left corner
      *  is (x1, y1) and the bottom right corner is (x2, y2). */
     function void drawRectangle(int x1, int y1, int x2, int y2) 
     {
+        var int y;
+        let y = y1;
+        while( y < (y2 + 1) )
+        {
+            do Screen.drawLine(x1,y, x2, y);
+            let y = y + 1;
+        }
+        return;
     }
 
     /** Draws a filled circle of radius r around (cx, cy). */
     function void drawCircle(int cx, int cy, int r) 
     {
+        var int dy;
+        var int temp;
+        
+        if(r > 181)
+        {
+            do Output.printString("Screen.drawCircle: r can at most be 181");
+            do Output.println();
+            do Sys.error(0);
+            return;
+        }
+        
+        //r <= 181, so we do not have overflow for r^2, and dy^2
+        let dy = -r;
+        while( dy < (r+1) )
+        {
+            let temp = Math.sqrt( (r+dy)*(r-dy) );
+            do Screen.drawLine(cx - temp, cy + dy, cx + temp, cy + dy);
+            let dy = dy + 1;
+        }
+        
+        return;
     }
 }
