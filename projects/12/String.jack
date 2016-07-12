@@ -6,55 +6,257 @@
 /**
  * Represents a String object. Implements the String type.
  */
-class String {
-
+class String 
+{
+    field Array array_; //the array to store the string
+    field int length_; //the current length_
+    field int capacity_; //the max length
+    
     /** Constructs a new empty String with a maximum length of maxLength. */
-    constructor String new(int maxLength) {
+    constructor String new(int maxLength) 
+    {
+        if(maxLength < 0)
+        {
+            do Output.printString("String.new: maxLength cannot be negative");
+            do Sys.error(0);
+        }
+        
+        if(maxLength = 0) //to support a zero-capacity string
+        {
+            let length_ = 0;
+            let capacity_ = 0;
+            return this;
+        }
+        
+        let array_ = Array.new(maxLength);
+        let length_ = 0;
+        let capacity_ = maxLength;
+        
+        return this;
     }
 
     /** De-allocates the string and frees its space. */
-    method void dispose() {
+    method void dispose() 
+    {
+        if(capacity_ > 0) //for zero-capacity string, we did not assign array, and thus cannot dispose it
+        {
+            do array_.dispose();
+        }
+        do Memory.deAlloc(this);
+        return;
     }
 
     /** Returns the current length of this String. */
-    method int length() {
+    method int length() 
+    {
+        return length_;
     }
 
     /** Returns the character at location j. */
-    method char charAt(int j) {
+    method char charAt(int j) 
+    {
+        if( (j < 0) | (j > (length_ - 1) ) )
+        {
+            do Output.printString("String.charAt: j is out of range");
+            do Sys.error(0);
+        }
+        
+        return array_[j];
     }
 
     /** Sets the j'th character of this string to be c. */
-    method void setCharAt(int j, char c) {
+    method void setCharAt(int j, char c) 
+    {
+        if( (j < 0) |  (j > (length_ - 1)) )
+        {
+            do Output.printString("String.charAt: j is out of range");
+            do Sys.error(0);
+        }
+        
+        let array_[j] = c;
+        return;
     }
 
     /** Appends the character c to the end of this String.
      *  Returns this string as the return value. */
-    method String appendChar(char c) {
+    method String appendChar(char c) 
+    {
+        if(length_ > (capacity_-1))
+        {
+            do Output.printString("String.appendChar: cannot append any more");
+            do Sys.error(0);
+        }
+        
+        let array_[length_] = c;
+        let length_ = length_ + 1;
+        
+        return this;
     }
 
     /** Erases the last character from this String. */
-    method void eraseLastChar() {
+    method void eraseLastChar() 
+    {
+        if(length_ = 0)
+        {
+            do Output.printString("String.eraseLastChar: cannot erase from an empty string");
+            do Sys.error(0);
+        }
+        
+        let length_ = length_ - 1;
+        return;
     }
 
     /** Returns the integer value of this String until the first non
      *  numeric character. */
-    method int intValue() {
+    method int intValue() 
+    {
+        var bool is_negative; //ture if the first letter is the negative symbol "-"
+        var int start_pos; //the start position of the non-negative integer
+        var int end_pos; //the end position of the non-negative integer
+        var int i; //an index for while loop
+        var int base; //the base, 1, 10, 100, 1000, ...
+        var int ret; //the return value
+
+        if(length_ = 0)
+        {
+            do Output.printString("String.intValue: empty string");
+            do Sys.error(0);
+        }
+        
+        //handle "-32768" specially 
+        if( (length_ > 5)  &  
+            (array_[0]=45) & //'-'
+            (array_[1]=51) & //'3'
+            (array_[2]=50) &//'2'//now length_ > 0
+            (array_[3]=55) & //'7'
+            (array_[4]=54) & //'6'
+            (array_[5]=56) ) //'8'    
+        {
+            return (-32767)-1;
+        }
+        
+        //now it cannot be "-32768" now
+        if(array_[0] = 45) //ASCII code of '-' is 45
+        {
+            let is_negative = true;
+            let start_pos = 1; 
+        }
+        else
+        {
+            let is_negative = false;
+            let start_pos = 0;
+        }
+
+
+        if(~(String.isDigit(array_[start_pos]))) //the first (of the start_pos) letter is not in [0,..,9]
+        {
+            do Output.printString("String.intValue: invalid string: ");
+            do Output.printString(this);
+            do Sys.error(0);
+        }
+        
+        //now the first letter is digit, i.e., the start_pos
+        
+        //find the position of the first non-numeric letter, i.e., the end position of the integer
+        let end_pos = start_pos;
+        while( (end_pos < length_) & (String.isDigit(array_[end_pos])))
+        {
+            let end_pos = end_pos + 1;
+        }
+        let end_pos = end_pos - 1;
+        
+        let ret = 0;
+        let i = end_pos;
+        let base = 1;
+        while( i > (start_pos - 1) )
+        {
+            let ret = ret + (base * (array_[i]-48) );
+            let i = i-1;
+            let base = base * 10;
+        }
+        
+        if(is_negative)
+        {
+            return -ret;
+        }
+        
+        return ret;
     }
 
     /** Sets this String to hold a representation of the given number. */
-    method void setInt(int number) {
+    method void setInt(int number) 
+    {
+        var int base; //the base, 1, 10, 100, 1000, 10000, cannot be 100000 (overflow)
+        var int reminder; 
+        var int quotient;
+        //clear the string first
+        let length_ = 0;
+        
+        if(number = ( (-32767) - 1) ) //handle overflow when number = -32768
+        {
+            do appendChar(45); //'-'
+            do appendChar(51); //'3'
+            do appendChar(50); //'2'
+            do appendChar(55); //'7'
+            do appendChar(54); //'6'
+            do appendChar(56); //'8'
+            return;
+        }
+        
+        //now number is not -32768
+        
+        if(number < 0) //if it is a negative integer
+        {
+            do appendChar(45);
+            let number = -number; //get the positive version, here number > -32768, so we do not have overflow
+        }
+        
+        
+        //find the largest base 
+        let base = 1;
+        while ( (base < 10000) & (number / base) > 0 )
+        {
+            let base = base * 10;
+        }
+        
+        if( (number/base) = 0 )
+        {
+            let base = base / 10;
+        }
+        
+        let reminder = number;
+        while(reminder > 0)
+        {
+            let quotient = reminder/base;
+            let reminder = reminder - (quotient * base);
+            do appendChar(quotient + 48);
+            let base = base / 10;
+        }
+        
+        return;
     }
 
     /** Returns the new line character. */
-    function char newLine() {
+    function char newLine() 
+    {
+        return 128; //ASCII code for newline is 10, but Jack uses 128
     }
 
     /** Returns the backspace character. */
-    function char backSpace() {
+    function char backSpace() 
+    {
+        return 129; //ASCII code for backspace is 8, but Jack uses 129
     }
 
     /** Returns the double quote (") character. */
-    function char doubleQuote() {
+    function char doubleQuote() 
+    {
+        return 34; //ASCII code for doube quote is 34
+    }
+    
+    /** Return true if the input letter is digital, i.e., from "0" (48) to "9" (57) */
+    function bool isDigit(char c)
+    {
+        return ( (c > 47) & (c < 58) );
     }
 }
