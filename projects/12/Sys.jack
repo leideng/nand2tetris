@@ -9,18 +9,54 @@
 class Sys {
 
     /** Performs all the initializations required by the OS. */
-    function void init() {
+    function void init() 
+    {
+        //pay attention to the order
+        
+        do Memory.init(); //initialize Memory first as other modules initialization needs it.
+        do Math.init();
+        do Screen.init(); 
+        do Output.init();        
+        do Keyboard.init();
+
+        do Main.main();
+        do Sys.halt();
+        return;
     }
 
     /** Halts execution. */
-    function void halt() {
+    function void halt() 
+    {
+        //enter an infinite loop
+        do Output.println();
+        do Output.printString("system halt with an infinite loop");
+        do Output.println();
+        while(true)
+        {
+        }
+        return;
     }
 
     /** Waits approximately duration milliseconds and then returns. */
-    function void wait(int duration) {
+    function void wait(int duration) 
+    {
+        var int i;
+        let i = 0;
+        while( ((i*2)/1) < duration ) //in my computer, it is about 2/3 loops to get 1ms
+        {
+            let i = i + 1;
+        }
+        return; 
     }
 
     /** Prints the given error code in the form "ERR<errorCode>", and halts. */
-    function void error(int errorCode) {
+    function void error(int errorCode) 
+    {
+        do Output.println();
+        do Output.printString("errorCode=");
+        do Output.printInt(errorCode);
+        do Output.println();
+        do Sys.halt();
+        return;
     }
 }
