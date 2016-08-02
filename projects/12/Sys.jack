@@ -42,7 +42,7 @@ class Sys {
     {
         var int i;
         let i = 0;
-        while( ((i*2)/1) < duration ) //in my computer, it is about 2/3 loops to get 1ms
+        while( ((i*2)/1) < duration ) //in my computer, it is about 1/2 loops to get 1ms (depends on both multiply (i*2) and division (i*2)/1)
         {
             let i = i + 1;
         }
