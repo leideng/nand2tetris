@@ -9,7 +9,9 @@
 class Keyboard {
 
     /** Initializes the keyboard. */
-    function void init() {
+    function void init() 
+    {
+        return;
     } 
 
     /**
@@ -32,7 +34,9 @@ class Keyboard {
      * ESC = 140
      * F1 - F12 = 141 - 152
      */
-    function char keyPressed() {
+    function char keyPressed() 
+    {
+        return Memory.peek(24576);
     }
 
     /**								
@@ -40,14 +44,99 @@ class Keyboard {
      * waits until a key is pressed and then released, then echoes
      * the key to the screen, and returns the value of the pressed key.
      */
-    function char readChar() {
+    function char readChar() 
+    {
+        var char c;
+        var char key;
+        var bool ok;
+        
+        let ok = false;
+        let key = 0;
+        do Output.printChar(0); //display the cursor as a black block
+        while(~ok)
+        {
+            //detect key-pressed
+            while(key = 0)
+            {
+                let key = Keyboard.keyPressed();
+            }
+            let c = key;
+            
+            //detect key-released
+            while(~(key = 0))
+            {
+                let key = Keyboard.keyPressed();
+            }
+            
+            do Output.backSpace(); 
+            do Output.printChar(c);
+            
+            let ok = true;
+        }
+        
+        return c;
     }
 
     /**								
      * Prints the message on the screen, reads the next line
      * (until a newline character) from the keyboard, and returns its value.
      */
-    function String readLine(String message) {
+    function String readLine(String message) 
+    {
+        var String s;
+        var String new_s;
+        var int current_capacity;
+        var char c;
+        var bool ok;
+        var int i;
+        
+        let current_capacity = 16; //initial capacity
+        let s = String.new(current_capacity);
+        let ok = false;
+        
+        //print the message
+        do Output.printString(message);
+        
+        while(~ok)
+        {
+            let c = Keyboard.readChar();
+            if(c = String.newLine())
+            {
+                do Output.backSpace(); 
+                do Output.printChar(c); //print newline
+                let ok = true;
+            }
+            else
+            {
+                if(c = String.backSpace())
+                {
+                    do s.eraseLastChar();
+                }
+                else //not backspace not newline
+                {                    
+                    if(s.length() = current_capacity) //we need to increase the capacity of the string
+                    {
+                        let current_capacity = current_capacity*2; //double the capacity
+                        let new_s = String.new(current_capacity);
+                        let i = 0; 
+                        while(i < s.length())
+                        {
+                            do new_s.appendChar(s.charAt(i));
+                            let i = i + 1;
+                        }
+                        do s.dispose();
+                        let s = new_s;
+                        let s = s.appendChar(c);
+                    }
+                    else
+                    {
+                        let s = s.appendChar(c);
+                    }
+                }
+            }
+        }
+        
+        return s;
     }   
 
     /**								
@@ -55,6 +144,14 @@ class Keyboard {
      * (until a newline character) from the keyboard, and returns its
      * integer value (until the first non numeric character).
      */
-    function int readInt(String message) {
+    function int readInt(String message) 
+    {
+        var String s;
+        var int ret;
+        
+        let s = Keyboard.readLine(message);
+        let ret = s.intValue();
+        
+        return ret;
     }
 }
