@@ -14,13 +14,30 @@ class Output {
 
     // Character map for printing on the left of a screen word
     static Array charMaps; 
-
+    
+    //cursor row index [0, 22]
+    static int cursor_row_;
+    
+    //cursor column index [0, 63]
+    static int cursor_col_;
+    
+    
     /** Initializes the screen and locates the cursor at the screen's top-left. */
-    function void init() {
+    function void init() 
+    {
+        let cursor_row_ = 0;
+        let cursor_col_ = 0;
+        //clear the screen
+        do Screen.clearScreen();
+        
+        do Output.initMap();
+        
+        return;
     }
 
-    // Initalizes the character map array
-    function void initMap() {
+    // Initializes the character map array
+    function void initMap() 
+    {
         var int i;
     
         let charMaps = Array.new(127);
@@ -65,7 +82,7 @@ class Output {
         do Output.create(64,30,51,51,59,59,59,27,3,30,0,0);  // @
         do Output.create(63,30,51,51,24,12,12,0,12,12,0,0);  // ?
 
-        do Output.create(65,0,0,0,0,0,0,0,0,0,0,0);          // A ** TO BE FILLED **
+        do Output.create(65,12,30,51,51,63,51,51,51,51,0,0);          // A ** TO BE FILLED **
         do Output.create(66,31,51,51,51,31,51,51,51,31,0,0); // B
         do Output.create(67,28,54,35,3,3,3,35,54,28,0,0);    // C
         do Output.create(68,15,27,51,51,51,51,51,27,15,0,0); // D
@@ -131,15 +148,16 @@ class Output {
         do Output.create(125,7,12,12,12,56,12,12,12,7,0,0);    // }
         do Output.create(126,38,45,25,0,0,0,0,0,0,0,0);        // ~
 
-	return;
+	    return;
     }
 
     // Creates a character map array of the given char index with the given values.
     function void create(int index, int a, int b, int c, int d, int e,
-		         int f, int g, int h, int i, int j, int k) {
-	var Array map;
+		                 int f, int g, int h, int i, int j, int k) 
+    {
+        var Array map;
 
-	let map = Array.new(11);
+        let map = Array.new(11);
         let charMaps[index] = map;
 
         let map[0] = a;
@@ -159,40 +177,214 @@ class Output {
     
     // Returns the character map (array of size 11) for the given character
     // If an invalid character is given, returns the character map of a black square.
-    function Array getMap(char c) {
+    function Array getMap(char c) 
+    {
         
-        if ((c < 32) | (c > 126)) {
+        if ((c < 32) | (c > 126)) 
+        {
             let c = 0;
         }
         
         return charMaps[c];
     }
 
-    /** Moves the cursor to the j’th column of the i’th row,
+    /** Moves the cursor to the j-th column of the i-th row,
      *  and erases the character that was there. */
-    function void moveCursor(int i, int j) {
+    function void moveCursor(int i, int j) 
+    {
+        let cursor_col_ = j;
+        let cursor_row_ = i;
+        do Output.printChar(0); //
+        //back to (j,i)
+        let cursor_col_ = j;
+        let cursor_row_ = i;
+        return;
     }
 
     /** Prints c at the cursor location and advances the cursor one
      *  column forward. */
-    function void printChar(char c) {
+    function void printChar(char c) 
+    {
+        var Array letter; 
+        var int y;
+        
+        let letter = charMaps[c];
+        let y =0;
+        while(y < 11)
+        {
+            //bit 0
+            if( (letter[y] & 128) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+7, (cursor_row_*11)+y);
+
+            //bit 1
+            if( (letter[y] & 64) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+6, (cursor_row_*11)+y);
+
+            //bit 2
+            if( (letter[y] & 32) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+5, (cursor_row_*11)+y);
+
+            //bit 3
+            if( (letter[y] & 16) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+4, (cursor_row_*11)+y);
+
+            //bit 4
+            if( (letter[y] & 8) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+3, (cursor_row_*11)+y);
+
+            //bit 5
+            if( (letter[y] & 4) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+2, (cursor_row_*11)+y);
+
+            //bit 6
+            if( (letter[y] & 2) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+1, (cursor_row_*11)+y);
+
+            //bit 7
+            if( (letter[y] & 1) > 0 )
+            {
+                do Screen.setColor(true);
+            }
+            else
+            {
+                do Screen.setColor(false);
+            }
+            do Screen.drawPixel((cursor_col_*8)+0, (cursor_row_*11)+y);
+
+            let y = y + 1;
+        }
+        
+        //forward the cursor
+        if(cursor_col_ = 63)
+        {
+            if(cursor_row_ = 22) //clear the screen and start over again
+            {
+                // do Screen.clearScreen();
+                let cursor_row_ = 0;
+            }
+            else
+            {
+                let cursor_row_ = cursor_row_ + 1;
+            }
+            let cursor_col_ = 0;
+        }
+        else
+        {
+            let cursor_col_ = cursor_col_ + 1;
+        }
+        
+        return;   
     }
 
     /** Prints s starting at the cursor location, and advances the
      *  cursor appropriately. */
-    function void printString(String s) {
+    function void printString(String s) 
+    {
+        var int i;
+        let i = 0;
+        while( i < s.length() )
+        {
+            do Output.printChar(s.charAt(i));
+            let i = i + 1;
+        }
+        
+        return;
     }
 
     /** Prints i starting at the cursor location, and advances the
      *  cursor appropriately. */
-    function void printInt(int i) {
+    function void printInt(int i) 
+    {
+        var String s;
+        let s = String.new(6); //we must set the max length to be 6 (an interger is at most 6 chars),
+                               //which is the capacity of string s
+        do s.setInt(i);
+        do Output.printString(s);   
+        do s.dispose();
+        return;
     }
 
     /** Advances the cursor to the beginning of the next line. */
-    function void println() {
+    function void println() 
+    {
+        if(cursor_row_ = 22)
+        {
+            do Screen.clearScreen();
+            let cursor_row_ = 0;        
+        }
+        else
+        {
+            let cursor_row_ = cursor_row_ + 1;
+        }
+        let cursor_col_ = 0;
+        return;
     }
 
     /** Moves the cursor one column back. */
-    function void backSpace() {
+    function void backSpace() 
+    {
+        if(cursor_col_ = 0)
+        {
+            if(cursor_row_ > 0)
+            {
+                let cursor_row_ = cursor_row_ - 1;
+                let cursor_col_ = 63;
+            }
+        }
+        else
+        {
+            let cursor_col_ = cursor_col_ - 1;
+        }
+        
+        return;
     }
 }
