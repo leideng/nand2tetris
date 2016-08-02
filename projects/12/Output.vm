@@ -1487,15 +1487,8 @@ pop static 2
 push argument 0
 pop static 1
 push constant 0
-call Output.printChar 1
-pop temp 0
-push argument 1
-pop static 2
-push argument 0
-pop static 1
-push constant 0
 return
-function Output.printChar 2
+function Output.printChar 4
 push argument 0
 push static 0
 add
@@ -1510,278 +1503,63 @@ push constant 11
 lt
 not
 if-goto WHILE_END0
+push constant 16384
+push static 1
+push constant 11
+call Math.multiply 2
 push local 1
-push local 0
 add
-pop pointer 1
-push that 0
-push constant 128
+push constant 32
+call Math.multiply 2
+add
+push static 2
+push constant 2
+call Math.divide 2
+add
+pop local 2
+push local 2
+call Memory.peek 1
+pop local 3
+push static 2
+push constant 1
 and
 push constant 0
-gt
+eq
 if-goto IF_TRUE0
 goto IF_FALSE0
 label IF_TRUE0
-push constant 0
-not
-call Screen.setColor 1
+push local 2
+push local 3
+push constant 1
+neg
+push constant 255
+and
+and
+push local 1
+push local 0
+add
+pop pointer 1
+push that 0
+or
+call Memory.poke 2
 pop temp 0
 goto IF_END0
 label IF_FALSE0
-push constant 0
-call Screen.setColor 1
+push local 2
+push local 3
+push constant 255
+and
+push local 1
+push local 0
+add
+pop pointer 1
+push that 0
+push constant 256
+call Math.multiply 2
+or
+call Memory.poke 2
 pop temp 0
 label IF_END0
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 7
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
-push local 1
-push local 0
-add
-pop pointer 1
-push that 0
-push constant 64
-and
-push constant 0
-gt
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-goto IF_END1
-label IF_FALSE1
-push constant 0
-call Screen.setColor 1
-pop temp 0
-label IF_END1
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 6
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
-push local 1
-push local 0
-add
-pop pointer 1
-push that 0
-push constant 32
-and
-push constant 0
-gt
-if-goto IF_TRUE2
-goto IF_FALSE2
-label IF_TRUE2
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-goto IF_END2
-label IF_FALSE2
-push constant 0
-call Screen.setColor 1
-pop temp 0
-label IF_END2
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 5
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
-push local 1
-push local 0
-add
-pop pointer 1
-push that 0
-push constant 16
-and
-push constant 0
-gt
-if-goto IF_TRUE3
-goto IF_FALSE3
-label IF_TRUE3
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-goto IF_END3
-label IF_FALSE3
-push constant 0
-call Screen.setColor 1
-pop temp 0
-label IF_END3
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 4
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
-push local 1
-push local 0
-add
-pop pointer 1
-push that 0
-push constant 8
-and
-push constant 0
-gt
-if-goto IF_TRUE4
-goto IF_FALSE4
-label IF_TRUE4
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-goto IF_END4
-label IF_FALSE4
-push constant 0
-call Screen.setColor 1
-pop temp 0
-label IF_END4
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 3
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
-push local 1
-push local 0
-add
-pop pointer 1
-push that 0
-push constant 4
-and
-push constant 0
-gt
-if-goto IF_TRUE5
-goto IF_FALSE5
-label IF_TRUE5
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-goto IF_END5
-label IF_FALSE5
-push constant 0
-call Screen.setColor 1
-pop temp 0
-label IF_END5
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 2
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
-push local 1
-push local 0
-add
-pop pointer 1
-push that 0
-push constant 2
-and
-push constant 0
-gt
-if-goto IF_TRUE6
-goto IF_FALSE6
-label IF_TRUE6
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-goto IF_END6
-label IF_FALSE6
-push constant 0
-call Screen.setColor 1
-pop temp 0
-label IF_END6
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 1
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
-push local 1
-push local 0
-add
-pop pointer 1
-push that 0
-push constant 1
-and
-push constant 0
-gt
-if-goto IF_TRUE7
-goto IF_FALSE7
-label IF_TRUE7
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-goto IF_END7
-label IF_FALSE7
-push constant 0
-call Screen.setColor 1
-pop temp 0
-label IF_END7
-push static 2
-push constant 8
-call Math.multiply 2
-push constant 0
-add
-push static 1
-push constant 11
-call Math.multiply 2
-push local 1
-add
-call Screen.drawPixel 2
-pop temp 0
 push local 1
 push constant 1
 add
@@ -1791,33 +1569,33 @@ label WHILE_END0
 push static 2
 push constant 63
 eq
-if-goto IF_TRUE8
-goto IF_FALSE8
-label IF_TRUE8
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
 push static 1
 push constant 22
 eq
-if-goto IF_TRUE9
-goto IF_FALSE9
-label IF_TRUE9
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
 push constant 0
 pop static 1
-goto IF_END9
-label IF_FALSE9
+goto IF_END2
+label IF_FALSE2
 push static 1
 push constant 1
 add
 pop static 1
-label IF_END9
+label IF_END2
 push constant 0
 pop static 2
-goto IF_END8
-label IF_FALSE8
+goto IF_END1
+label IF_FALSE1
 push static 2
 push constant 1
 add
 pop static 2
-label IF_END8
+label IF_END1
 push constant 0
 return
 function Output.printString 1

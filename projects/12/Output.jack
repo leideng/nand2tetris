@@ -194,15 +194,67 @@ class Output {
     {
         let cursor_col_ = j;
         let cursor_row_ = i;
-        do Output.printChar(0); //
+        //do Output.printChar(0); //
         //back to (j,i)
-        let cursor_col_ = j;
-        let cursor_row_ = i;
+        //let cursor_col_ = j;
+        //let cursor_row_ = i;
         return;
     }
+    
+    /** Prints c at the cursor location and advances the cursor one
+     *  column forward. */
+    //use bit manipulation, but note that an integer is 16-bit but each row
+    //of the character is only 8-bit    
+    function void printChar(char c) 
+    {
+        var Array letter; 
+        var int y;
+        var int memory_location;
+        var int memory_org_value;
+        
+        let letter = charMaps[c];
+        let y =0;
+        while(y < 11)
+        {
+            let memory_location = 16384  +  (((cursor_row_*11)+y)*32) + (cursor_col_/2);
+            let memory_org_value = Memory.peek(memory_location);
+            if( (cursor_col_ & 1) = 0 ) //cursor_col_ is even: 0,2,4,...,62
+            {
+                do  Memory.poke(memory_location, (((memory_org_value & (-1 & 255))) | (letter[y]) ) );
+            }
+            else //cursor_col_ is odd: 1,3,5,...,63
+            {
+                do  Memory.poke(memory_location, ((memory_org_value & 255) | ( (letter[y]) *256)) );
+            }            
+            let y = y + 1;
+        }
+        
+        //forward the cursor
+        if(cursor_col_ = 63)
+        {
+            if(cursor_row_ = 22) //clear the screen and start over again
+            {
+                // do Screen.clearScreen();
+                let cursor_row_ = 0;
+            }
+            else
+            {
+                let cursor_row_ = cursor_row_ + 1;
+            }
+            let cursor_col_ = 0;
+        }
+        else
+        {
+            let cursor_col_ = cursor_col_ + 1;
+        }
+        
+        return;   
+    }
+    
 
     /** Prints c at the cursor location and advances the cursor one
      *  column forward. */
+    /** 
     function void printChar(char c) 
     {
         var Array letter; 
@@ -303,6 +355,7 @@ class Output {
             let y = y + 1;
         }
         
+        
         //forward the cursor
         if(cursor_col_ = 63)
         {
@@ -324,7 +377,8 @@ class Output {
         
         return;   
     }
-
+    */
+    
     /** Prints s starting at the cursor location, and advances the
      *  cursor appropriately. */
     function void printString(String s) 

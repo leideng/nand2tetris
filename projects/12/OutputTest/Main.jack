@@ -17,8 +17,10 @@ class Main {
     
         do Output.moveCursor(0, 63);
         do Output.printChar(66);
+        
         do Output.moveCursor(22, 0);
         do Output.printChar(67);
+        
         do Output.moveCursor(22, 63);
         do Output.printChar(68);
         do Output.printChar(65);
@@ -37,7 +39,6 @@ class Main {
         do Output.printInt(-12345);
         do Output.backSpace();
         do Output.printInt(6789);
-        
         
         return;
     }
