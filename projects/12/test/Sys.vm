@@ -16,6 +16,8 @@ pop temp 0
 push constant 0
 return
 function Sys.halt 0
+call Output.println 0
+pop temp 0
 push constant 33
 call String.new 1
 push constant 115
@@ -119,6 +121,8 @@ label WHILE_END0
 push constant 0
 return
 function Sys.error 0
+call Output.println 0
+pop temp 0
 push constant 10
 call String.new 1
 push constant 101

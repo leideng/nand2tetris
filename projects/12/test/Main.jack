@@ -1,22 +1,22 @@
 // This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
 // by Nisan and Schocken, MIT Press.
-// File name: projects/12/MathTest/Main.jack
+// File name: projects/11/Pong/Main.jack
 
-/** Test program for the OS Math class. */
+/**
+ * The main class of the Pong game.
+ */
 class Main {
 
-    /** Performs several mathematical operations from the Math class. */
+    /** Initializes the Pong game and starts it. */
     function void main() {
-        var Array r;          // stores test results;
-        
-        let r = 8000;
-        
-        let r[0] = 180/6;                  // 3
-       // do Output.printInt(r[0]);
-       // do Output.println();
-        
+        var PongGame game;
+
+	do PongGame.newInstance();
+        let game = PongGame.getInstance();
+        do game.run();
+	do game.dispose();
+
         return;
     }
-
 }

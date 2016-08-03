@@ -6,27 +6,84 @@
 /**
  * Memory operations library.
  */ 
-class Memory {
-
+class Memory 
+{
+    static Array free_list_;
+    
     /** Initializes memory parameters. */
-    function void init() {
+    function void init() 
+    {
+        let free_list_ = 2048; //the heap is from 2048 to 16383; (a typo in page 141, which is 16483)
+        let free_list_[0] = 16383 - 2048 + 1; //heap length
+        let free_list_[1] = null; 
+        return;
     }
 
     /** Returns the value of the main memory at the given address. */
-    function int peek(int address) {
+    function int peek(int address) 
+    {
+        var Array memory;
+        
+        let memory = 0;
+        
+        return memory[address];
     }
 
     /** Sets the value of the main memory at this address
      *  to the given value. */
-    function void poke(int address, int value) {
+    function void poke(int address, int value) 
+    {
+        var Array memory;
+        
+        let memory = 0;      
+        let memory[address] = value;
+        
+        return;
     }
 
     /** finds and allocates from the heap a memory block of the 
      *  specified size and returns a reference to its base address. */
-    function int alloc(int size) {
+    function int alloc(int size) 
+    {
+        //use first-fit heuristics
+        var Array head;
+        
+        let head = free_list_;
+        
+        while( head[0] <  (size + 3) )
+        {
+            let head = head[1];
+        }
+        
+        if(head = null)
+        {
+            do Output.println();
+            do Output.printString("no available free-memory block now.");
+            do Output.println();
+            do Sys.error(0);
+        }
+        
+        let head[0] = head[0] - (size+1); //update the size of this free-memory block
+        let head[head[0]] = size + 1; //update the size of the allocated block;
+        return head + (head[0]+1); //return the address of the allocated block
     }
 
     /** De-allocates the given object and frees its space. */
-    function void deAlloc(int object) {
+    function void deAlloc(int object) 
+    {
+        var Array head;
+        var Array segment;
+        
+        let head = free_list_;
+        
+        while(~ (head[1] = null) ) //we find the final free-memeory block
+        {
+            let head = head[1];
+        }
+        
+        let segment = object - 1;
+        let head[1] = segment;
+        let segment[1] = null; 
+        return;
     }    
 }
