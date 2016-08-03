@@ -5,6 +5,8 @@
 
 /**
  * A basic math library.
+ *
+ * @TODO We should improve the efficiency of some functions, now it is a speed bottleneck (together with Screen module)
  */
 class Math 
 {

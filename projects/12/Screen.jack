@@ -5,6 +5,10 @@
 
 /**
  * Graphic screen library.
+ *
+ * @TODO: we should improve the efficiency of drawLine, now it is a speed bottleneck (together with Math module)
+ *        Some thoughts: rather than drawing it pixel by pixel,  
+ *         we can draw it word by word first and then pixel by pixel, ideally, it should save 16x time.
  */
 class Screen 
 {
