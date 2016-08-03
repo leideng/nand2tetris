@@ -52,6 +52,7 @@ class Screen
         while(mem < 24576)
         {
             do Memory.poke(mem, 0);
+            let mem = mem + 1;
         }
         return;
     }
@@ -64,6 +65,7 @@ class Screen
         while(mem < 24576)
         {
             do Memory.poke(mem, -1);
+            let mem = mem + 1;
         }
         return;
     }
